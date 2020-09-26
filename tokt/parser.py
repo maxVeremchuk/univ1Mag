@@ -14,7 +14,6 @@ ops = {
     '*': operator.mul,
 }
 funcs = {'sin': sin, 'cos': cos, 'tg': tan, 'exp': exp, 'abs': abs}
--2.1316282072803006e-13
 
 
 def is_float(value):
