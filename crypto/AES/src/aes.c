@@ -121,13 +121,12 @@ void key_schedule(unsigned int w[], unsigned int key[][BLOCK_SIZE])
     return;
 }
 
-// this function do result = a XOR b
 void add_roundkey(
     unsigned int result[][BLOCK_SIZE],
     unsigned int a[][BLOCK_SIZE],
     unsigned int b[][BLOCK_SIZE])
 {
-    int i, j; // counters for the loops
+    int i, j;
 
     for (i = 0; i < BLOCK_SIZE; i++)
         for (j = 0; j < BLOCK_SIZE; j++) result[i][j] = a[i][j] ^ b[i][j];
@@ -135,28 +134,21 @@ void add_roundkey(
     return;
 }
 
-// this function lookup in sBox table and return the new value
 unsigned int sub_byte(unsigned int row, unsigned int column)
 {
     return sBox[row][column];
 }
 
-// this function shifts the rows to the left
-// each row is shifted differently
 void shift_rows(unsigned int state[][BLOCK_SIZE])
 {
-    unsigned int temp; // temporary variables to do the shifts
+    unsigned int temp;
 
-    // first row is not shifted
-
-    // second row is shifted left 1 time
     temp = state[1][0];
     state[1][0] = state[1][1];
     state[1][1] = state[1][2];
     state[1][2] = state[1][3];
     state[1][3] = temp;
 
-    // third row is shifted left 2 times
     temp = state[2][0];
     state[2][0] = state[2][2];
     state[2][2] = temp;
@@ -165,7 +157,6 @@ void shift_rows(unsigned int state[][BLOCK_SIZE])
     state[2][1] = state[2][3];
     state[2][3] = temp;
 
-    // fourth row is shifted left 3 times
     temp = state[3][0];
     state[3][0] = state[3][3];
     state[3][3] = state[3][2];
@@ -175,14 +166,10 @@ void shift_rows(unsigned int state[][BLOCK_SIZE])
     return;
 }
 
-// this function mix the columns
-// state column multiplied with mCon row
-// instead of normal multiplication here we do GF(2^8) multiply
-// and instead of addition here we do XOR operation
 void mix_columns(unsigned int result[][BLOCK_SIZE], unsigned int state[][BLOCK_SIZE])
 {
-    unsigned int sum = 0; // we hold the sum here
-    int i, j, k;          // counters for the loops
+    unsigned int sum = 0;
+    int i, j, k;
 
     for (i = 0; i < BLOCK_SIZE; i++)
     {
@@ -282,28 +269,21 @@ void encryption(unsigned int state[][BLOCK_SIZE], unsigned int w[])
     return;
 }
 
-// this function lookup in rsBox table and return the new value
 unsigned int inv_sub_byte(unsigned int row, unsigned int column)
 {
     return rsBox[row][column];
 }
 
-// this function shifts the rows to the right
-// each row is shifted differently
 void inv_shift_rows(unsigned int state[][BLOCK_SIZE])
 {
-    unsigned int temp; // temporary variable to do the shifts
+    unsigned int temp;
 
-    // first row is not shifted
-
-    // second row is shifted right 1 time
     temp = state[1][3];
     state[1][3] = state[1][2];
     state[1][2] = state[1][1];
     state[1][1] = state[1][0];
     state[1][0] = temp;
 
-    // third row is shifted right 2 times
     temp = state[2][0];
     state[2][0] = state[2][2];
     state[2][2] = temp;
@@ -312,7 +292,6 @@ void inv_shift_rows(unsigned int state[][BLOCK_SIZE])
     state[2][1] = state[2][3];
     state[2][3] = temp;
 
-    // fourth row is shifted right 3 times
     temp = state[3][0];
     state[3][0] = state[3][1];
     state[3][1] = state[3][2];
@@ -324,9 +303,9 @@ void inv_shift_rows(unsigned int state[][BLOCK_SIZE])
 
 void inv_mix_columns(unsigned int result[][BLOCK_SIZE], unsigned int state[][BLOCK_SIZE])
 {
-    unsigned int sum = 0; // we hold the sum here
-    int i, j, k;          // counters for the loops
-    unsigned int temp;    // temporary variable to hold the results
+    unsigned int sum = 0;
+    int i, j, k;
+    unsigned int temp;
 
     for (i = 0; i < BLOCK_SIZE; i++)
     {
@@ -338,34 +317,34 @@ void inv_mix_columns(unsigned int result[][BLOCK_SIZE], unsigned int state[][BLO
                 {
                     // x = state[k][i]
                     case 9:
-                        temp = gfMul(state[k][i], 2); // x * 2
-                        temp = gfMul(temp, 2);        // (x * 2) * 2
-                        temp = gfMul(temp, 2);        // ((x * 2) * 2) * 2
-                        temp ^= state[k][i];          // (((x * 2) * 2) * 2) + x = x * 9
+                        temp = gfMul(state[k][i], 2);
+                        temp = gfMul(temp, 2);
+                        temp = gfMul(temp, 2);
+                        temp ^= state[k][i];
                         break;
 
                     case 11:
-                        temp = gfMul(state[k][i], 2); // x * 2
-                        temp = gfMul(temp, 2);        // (x * 2) * 2
-                        temp ^= state[k][i];          // ((x * 2) * 2) + x
-                        temp = gfMul(temp, 2);        // (((x * 2) * 2) + x) * 2
-                        temp ^= state[k][i];          // ((((x * 2) * 2) + x) * 2) + x = x * 11
+                        temp = gfMul(state[k][i], 2);
+                        temp = gfMul(temp, 2);
+                        temp ^= state[k][i];
+                        temp = gfMul(temp, 2);
+                        temp ^= state[k][i];
                         break;
 
                     case 13:
-                        temp = gfMul(state[k][i], 2); // x * 2
-                        temp ^= state[k][i];          // (x * 2) + x
-                        temp = gfMul(temp, 2);        // ((x * 2) + x) * 2
-                        temp = gfMul(temp, 2);        // (((x * 2) + x) * 2) * 2
-                        temp ^= state[k][i];          // ((((x * 2) + x) * 2) * 2) + x = x * 13
+                        temp = gfMul(state[k][i], 2);
+                        temp ^= state[k][i];
+                        temp = gfMul(temp, 2);
+                        temp = gfMul(temp, 2);
+                        temp ^= state[k][i];
                         break;
 
                     case 14:
-                        temp = gfMul(state[k][i], 2); // x * 2
-                        temp ^= state[k][i];          // (x * 2) + x
-                        temp = gfMul(temp, 2);        // ((x * 2) + x) * 2
-                        temp ^= state[k][i];          // (((x * 2) + x) * 2) + x
-                        temp = gfMul(temp, 2);        // ((((x * 2) + x) * 2) + x) * 2 = x * 14
+                        temp = gfMul(state[k][i], 2);
+                        temp ^= state[k][i];
+                        temp = gfMul(temp, 2);
+                        temp ^= state[k][i];
+                        temp = gfMul(temp, 2);
                         break;
                 }
                 sum ^= temp;
@@ -378,14 +357,13 @@ void inv_mix_columns(unsigned int result[][BLOCK_SIZE], unsigned int state[][BLO
     return;
 }
 
-// this function encrypts the plaintext
 void decryption(unsigned int state[][BLOCK_SIZE], unsigned int w[])
 {
-    unsigned int roundKey[BLOCK_SIZE][BLOCK_SIZE]; // round key
-    unsigned int table[BLOCK_SIZE][BLOCK_SIZE];    // temp array to hold results
+    unsigned int roundKey[BLOCK_SIZE][BLOCK_SIZE];
+    unsigned int table[BLOCK_SIZE][BLOCK_SIZE];
 
-    unsigned int row, column; // row and column for sub_bytes lookup
-    int i, j, k, i1, i2;      // counters for the loops
+    unsigned int row, column;
+    int i, j, k, i1, i2;
 
     // round 0
     // 1. add_roundkey
@@ -458,8 +436,6 @@ void decryption(unsigned int state[][BLOCK_SIZE], unsigned int w[])
         printArray(state);
     }
 
-    // round 10
-    // 1. add_roundkey
     getRoundKey(w, roundKey, 0);
     add_roundkey(state, state, roundKey);
 
@@ -469,20 +445,18 @@ void decryption(unsigned int state[][BLOCK_SIZE], unsigned int w[])
     return;
 }
 
-// this function converts hexadecimal character to integer
 int hexCharToDec(char hex)
 {
     if (hex >= 48 && hex <= 57)
-    {                       // ascii code for character 1-9
-        return (hex - '0'); // as it happens, the ascii value of the characters 1-9
-                            // is greater than the value of '0'
+    {
+        return (hex - '0');
+
     }
     else
     {
         switch (hex)
         {
-            case 'a': // a hexadecimal is a number 10 to decimal. Similar for the
-                      // rest
+            case 'a':
                 return 10;
 
             case 'b':
@@ -503,53 +477,38 @@ int hexCharToDec(char hex)
     }
 }
 
-// this function returns the integer value of the 2 bytes hex input
-// input: xy || row = x	and column = y
 void get2Bytes(unsigned int a, unsigned int* row, unsigned int* column)
 {
-    // we need 2 bytes for the hexadecimal value and 1 more for '\0' character
     unsigned char temp[3];
 
-    // convert the number to string
     sprintf(temp, "%x", a);
 
     if (strlen(temp) == 1)
-    { // if number is smaller than 15, c saving 1 digit instead 2 digits
-      // e.g. (14)dec = (0x0e)hex | C saving only e instead of 0e
-        // add the '\0' character to 2nd position, because we need 1 slot for the
-        // hexadecimal number
+    {
+
         temp[1] = '\0';
 
-        // find the row for the lookup
-        *row = 0; // row will be 0, because number will have form like this: 0x0..
-        // printf("(%c)hex = (%d)dec\n", temp[0], *row);
 
-        // find the column for the lookup
+        *row = 0;
+
         *column = hexCharToDec(temp[0]);
-        // printf("(%c)hex = (%d)dec\n", temp[1], *column);
     }
     else
     {
-        // add the '\0' character to 3rd position, because we need 2 slots for the
-        // hexadecimal number
         temp[2] = '\0';
 
-        // find the row for the lookup
         *row = hexCharToDec(temp[0]);
-        // printf("(%c)hex = (%d)dec\n", temp[0], *row);
 
-        // find the column for the lookup
         *column = hexCharToDec(temp[1]);
-        // printf("(%c)hex = (%d)dec\n", temp[1], *column);
     }
 
     return;
 }
 
-// this function return the 16bytes round key
+
 void getRoundKey(unsigned int w[], unsigned int roundKey[][BLOCK_SIZE], int round)
 {
-    int i, j; // counters for the loops
+    int i, j;
 
     for (i = (round * 4); i < ((round * 4) + 4); i++)
     {
@@ -562,14 +521,12 @@ void getRoundKey(unsigned int w[], unsigned int roundKey[][BLOCK_SIZE], int roun
     return;
 }
 
-// multiply two numbers in the GF(2^8)
-// polynomial: x^8 + x^4 + x^3 + x + 1
-// binary: 00011011  || hex: 0x1b
+
 unsigned int gfMul(unsigned int a, unsigned int b)
 {
-    unsigned int r = 0;      // result
-    unsigned int hi_bit_set; // high bit (leftmost)
-    int i;                   // counter for the loop
+    unsigned int r = 0;
+    unsigned int hi_bit_set;
+    int i;
 
     for (i = 0; i < 8; i++)
     {
@@ -577,23 +534,21 @@ unsigned int gfMul(unsigned int a, unsigned int b)
         hi_bit_set = (a & 0x80);
         a <<= 1;
 
-        if (hi_bit_set) a ^= 0x1b; // x^8 + x^4 + x^3 + x + 1
+        if (hi_bit_set) a ^= 0x1b;
         b >>= 1;
     }
 
-    // if result legnth is more than 8 bits
+
     if (r > 255 && r < 512) return r - 256;
 
     if (r > 511) return r - 512;
 
-    // if result is max 8 bits
     return r;
 }
 
-// this function converts string to unsigned int array 4x4
 void convertStringToBlock(char string[BYTES + 1], unsigned int block[][BLOCK_SIZE])
 {
-    int i, j; // counters for the loops
+    int i, j;
 
     for (i = 0; i < BLOCK_SIZE; i++)
     {
@@ -609,7 +564,7 @@ void convertStringToBlock(char string[BYTES + 1], unsigned int block[][BLOCK_SIZ
 // this function converts unsigned int array 4x4 to string
 void convertBlockToString(unsigned int block[][BLOCK_SIZE], char string[BYTES + 1])
 {
-    int i, j; // counters for the loops
+    int i, j;
 
     for (i = 0; i < BLOCK_SIZE; i++)
     {
@@ -622,10 +577,9 @@ void convertBlockToString(unsigned int block[][BLOCK_SIZE], char string[BYTES + 
     return;
 }
 
-// this function prints the array
 void printArray(unsigned int array[][BLOCK_SIZE])
 {
-    int i, j; // counters for the loops
+    int i, j;
 
     for (i = 0; i < BLOCK_SIZE; i++)
     {
@@ -657,25 +611,20 @@ void test()
                                                 {0x61, 0x6d, 0x75, 0x46},
                                                 {0x74, 0x79, 0x6e, 0x75}};
 
-    // we have 10 round, so we need 40 words in array plus 4 for the given key
-    // each word have 4 bytes, so we need 44 * 4 = 176
-    unsigned int w[176]; // all round keys
+    unsigned int w[176];
 
     /*****************************/
 
-    // print the plaintext and key
     printf("Plaintext:\n");
     printArray(state);
 
     printf("Key:\n");
     printArray(key);
 
-    // we calculate all round keys 1-10
     key_schedule(w, key);
 
     encryption(state, w);
 
-    // print the result (ciphertext)
     printf("\nCiphertext:\n");
     printArray(state);
 
@@ -683,7 +632,6 @@ void test()
 
     decryption(state, w);
 
-    // print the result (plaintext)
     printf("\nPlaintext:\n");
     printArray(state);
 
