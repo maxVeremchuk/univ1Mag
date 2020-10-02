@@ -67,16 +67,16 @@ void key_schedule(unsigned int w[], unsigned int key[][BLOCK_SIZE])
     int i, j, k;
 
     // first round key
-    printf("Round keys:\n");
+    //printf("Round keys:\n");
     for (i = 0; i < BLOCK_SIZE; i++)
     {
-        printf("w[%d] = ", i);
+        //printf("w[%d] = ", i);
         for (j = 0; j < BLOCK_SIZE; j++)
         {
             w[(i * 4) + j] = key[j][i];
-            printf("%x ", w[(i * 4) + j]);
+            //printf("%x ", w[(i * 4) + j]);
         }
-        printf("\t");
+        //printf("\t");
     }
 
     // 4 ... Nk(Nr+1)
@@ -201,8 +201,8 @@ void encryption(unsigned int state[][BLOCK_SIZE], unsigned int w[])
     getRoundKey(w, roundKey, 0);
     add_roundkey(state, state, roundKey);
 
-    printf("add_roundkey:\n");
-    printArray(state);
+    //printf("add_roundkey:\n");
+    //printArray(state);
 
     // round 1-9
     // 1. sub_bytes
@@ -219,24 +219,24 @@ void encryption(unsigned int state[][BLOCK_SIZE], unsigned int w[])
                 state[i][j] = sub_byte(row, column);
             }
         }
-        printf("sub_bytes:\n");
-        printArray(state);
+        //printf("sub_bytes:\n");
+        //printArray(state);
 
         shift_rows(state);
 
-        printf("shift_rows:\n");
-        printArray(state);
+        //printf("shift_rows:\n");
+        //printArray(state);
 
         mix_columns(table, state);
 
-        printf("mix_columns:\n");
-        printArray(table);
+        //printf("mix_columns:\n");
+        //printArray(table);
 
         getRoundKey(w, roundKey, k);
         add_roundkey(state, table, roundKey);
 
-        printf("add_roundkey:\n");
-        printArray(state);
+        //printf("add_roundkey:\n");
+        //printArray(state);
     }
 
     // round 10
@@ -252,19 +252,19 @@ void encryption(unsigned int state[][BLOCK_SIZE], unsigned int w[])
         }
     }
 
-    printf("sub_bytes:\n");
-    printArray(state);
+    //printf("sub_bytes:\n");
+    //printArray(state);
 
     shift_rows(state);
 
-    printf("shift_rows:\n");
-    printArray(state);
+    //printf("shift_rows:\n");
+    //printArray(state);
 
     getRoundKey(w, roundKey, 10);
     add_roundkey(state, state, roundKey);
 
-    printf("add_roundkey:\n");
-    printArray(state);
+    //printf("add_roundkey:\n");
+    //printArray(state);
 
     return;
 }
@@ -372,13 +372,13 @@ void decryption(unsigned int state[][BLOCK_SIZE], unsigned int w[])
     getRoundKey(w, roundKey, 10);
     add_roundkey(state, state, roundKey);
 
-    printf("\nadd_roundkey:\n");
-    printArray(state);
+    //printf("\nadd_roundkey:\n");
+    //printArray(state);
 
     inv_shift_rows(state);
 
-    printf("inv_shift_rows:\n");
-    printArray(state);
+    //printf("inv_shift_rows:\n");
+    //printArray(state);
 
     for (i = 0; i < BLOCK_SIZE; i++)
     {
@@ -389,8 +389,8 @@ void decryption(unsigned int state[][BLOCK_SIZE], unsigned int w[])
         }
     }
 
-    printf("inv_sub_bytes:\n");
-    printArray(state);
+    //printf("inv_sub_bytes:\n");
+    //printArray(state);
 
     // round 1-9
     // 1. add_roundkey
@@ -402,13 +402,13 @@ void decryption(unsigned int state[][BLOCK_SIZE], unsigned int w[])
         getRoundKey(w, roundKey, k);
         add_roundkey(state, state, roundKey);
 
-        printf("add_roundkey:\n");
-        printArray(state);
+        //printf("add_roundkey:\n");
+        //printArray(state);
 
         inv_mix_columns(table, state);
 
-        printf("inv_mix_columns:\n");
-        printArray(table);
+        //printf("inv_mix_columns:\n");
+        //printArray(table);
 
         for (i1 = 0; i1 < BLOCK_SIZE; i1++)
         {
@@ -420,8 +420,8 @@ void decryption(unsigned int state[][BLOCK_SIZE], unsigned int w[])
 
         inv_shift_rows(state);
 
-        printf("inv_shift_rows:\n");
-        printArray(state);
+        //printf("inv_shift_rows:\n");
+        //printArray(state);
 
         for (i = 0; i < BLOCK_SIZE; i++)
         {
@@ -432,15 +432,15 @@ void decryption(unsigned int state[][BLOCK_SIZE], unsigned int w[])
             }
         }
 
-        printf("inv_sub_bytes:\n");
-        printArray(state);
+        //printf("inv_sub_bytes:\n");
+        //printArray(state);
     }
 
     getRoundKey(w, roundKey, 0);
     add_roundkey(state, state, roundKey);
 
-    printf("add_roundkey:\n");
-    printArray(state);
+    //printf("add_roundkey:\n");
+    //printArray(state);
 
     return;
 }
