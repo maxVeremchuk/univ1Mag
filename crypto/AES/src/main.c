@@ -9,12 +9,7 @@ int main()
     time_t start, end;
     start = clock();
 
-    FILE* stream; // = fopen("test.txt", "r");
-    if ((stream = fopen("test.txt", "rb")) == NULL)
-    {
-        printf("Can't open ");
-        exit(1);
-    }
+    FILE* stream;
 
     unsigned int key[BLOCK_SIZE][BLOCK_SIZE] = {{0x54, 0x73, 0x20, 0x67},
                                                 {0x68, 0x20, 0x4b, 0x20},
@@ -22,15 +17,19 @@ int main()
                                                 {0x74, 0x79, 0x6e, 0x75}};
     unsigned int w[176];
     key_schedule(w, key);
-    for (int counter = 0; counter < 20; ++counter)
+    for (int counter = 0; counter < 100; ++counter)
     {
         printf("iteration %d\n\n\n", counter);
+        if ((stream = fopen("test.txt", "rb")) == NULL)
+        {
+            printf("Can't open ");
+            exit(1);
+        }
         unsigned int state[BLOCK_SIZE][BLOCK_SIZE];
         char buffer[BLOCK_SIZE * BLOCK_SIZE];
 
-        int count = 0;
         int read = 0;
-        while((read = fread(buffer, 1, 16, stream)) > 0)
+        while ((read = fread(buffer, 1, 16, stream)) > 0)
         {
             for (int i = 0; i < BLOCK_SIZE; ++i)
             {
@@ -42,19 +41,14 @@ int main()
 
             key_schedule(w, key);
             encryption(state, w);
-            count++;
-            if(count > 1000)
-            {
-                count = 0;
-                printf("encryption...");
-            }
         }
     }
 
     end = clock();
-    printf("%f", ((double)(end - start)) / CLOCKS_PER_SEC); //196
+    printf("%f", ((double)(end - start)) / CLOCKS_PER_SEC); //4103.13 s
     fclose(stream);
-    //test();
+
+    // test();
 
     return 0;
 }
