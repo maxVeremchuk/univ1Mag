@@ -14,7 +14,6 @@ void error_server(const char* msg)
 
 void run_blocking_server(int portno)
 {
-
     int sockfd, newsockfd;
     socklen_t clilen;
     char buffer[256];
@@ -27,6 +26,11 @@ void run_blocking_server(int portno)
     {
         error_server("ERROR opening socket");
     }
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int)) < 0)
+    {
+        error("setsockopt(SO_REUSEADDR) failed");
+    }
+
     bzero((char*)&serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = INADDR_ANY;
@@ -59,9 +63,10 @@ void run_blocking_server(int portno)
     {
         error_server("ERROR writing to socket");
     }
+
     close(newsockfd);
     close(sockfd);
-     printf("close servers");
+    printf("close servers");
 }
 
 // int main(int argc, char* argv[])
