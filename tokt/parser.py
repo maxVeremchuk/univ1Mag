@@ -110,7 +110,7 @@ def calclulate_rpn(rpn):
 
 if __name__ == "__main__":
 
-    formulas = ["2*sin(1/(exp(3.5*x))+1)-tg(x+3.14/2)",
+    formulas = ["2*sin(1/(exp(3.5*x))+1)-tg(x+PI/2)",
                 "1+sin(2*sin(E*x)/exp(tg(pow(4, 5)+(pow(4, 5)))-6*7*8))-9*tg(abs(10-cos(PI+E))*sqrt(abs(tg(11+PI)+tg(12))))",
                 "sin(x)",
                 "1+sin(tg(2)))",

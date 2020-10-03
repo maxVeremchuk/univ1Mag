@@ -1,3 +1,4 @@
 *.out
 .clang-format
 **/build
+.vscode
