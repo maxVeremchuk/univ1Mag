@@ -8,8 +8,8 @@ kalyna_t* kalyna_init()
 
     ctx->nb = kBLOCK_128 / kBITS_IN_WORD;
 
-    ctx->nk = kKEY_128 / kBITS_IN_WORD;
-    ctx->nr = kNR_128;
+    ctx->nk = kKEY / kBITS_IN_WORD;
+    ctx->nr = kNR;
 
     ctx->state = (uint64*)calloc(ctx->nb, sizeof(uint64));
     if (ctx->state == NULL)

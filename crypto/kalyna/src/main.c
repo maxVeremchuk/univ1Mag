@@ -18,7 +18,6 @@ int main(int argc, char** argv)
     uint64 pt22_e[2] = {0x1716151413121110ULL, 0x1f1e1d1c1b1a1918ULL};
     uint64 ct22_e[2];
     uint64 key22_e[2] = {0x0706050403020100ULL, 0x0f0e0d0c0b0a0908ULL};
-    // uint64 expect22_e[2] = {0x20ac9b777d1cbf81ULL, 0x06add2b439eac9e1ULL};
 
     for (int counter = 0; counter < 100; ++counter)
     {
