@@ -1,3 +1,5 @@
+#include "common.h"
+
 #include <netdb.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -6,12 +8,6 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-
-void error_client(const char* msg)
-{
-    perror(msg);
-    exit(0);
-}
 
 void run_blocking_client(char* host_name, int portno, char *message)
 {
@@ -23,7 +19,7 @@ void run_blocking_client(char* host_name, int portno, char *message)
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
     {
-        error_client("ERROR opening socket");
+        error("ERROR opening socket");
     }
     server = gethostbyname(host_name);
     if (server == NULL)
@@ -37,19 +33,19 @@ void run_blocking_client(char* host_name, int portno, char *message)
     serv_addr.sin_port = htons(portno);
     if (connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
     {
-        error_client("ERROR connecting");
+        error("ERROR connecting");
     }
 
     n = write(sockfd, message, strlen(message));
     if (n < 0)
     {
-        error_client("ERROR writing to socket");
+        error("ERROR writing to socket");
     }
     bzero(buffer, 256);
     n = read(sockfd, buffer, 255);
     if (n < 0)
     {
-        error_client("ERROR reading from socket");
+        error("ERROR reading from socket");
     }
     printf("%s\n", buffer);
     close(sockfd);

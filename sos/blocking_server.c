@@ -1,3 +1,5 @@
+#include "common.h"
+
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,12 +7,6 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-
-void error_server(const char* msg)
-{
-    perror(msg);
-    exit(1);
-}
 
 void run_blocking_server(int portno)
 {
@@ -24,7 +20,7 @@ void run_blocking_server(int portno)
 
     if (sockfd < 0)
     {
-        error_server("ERROR opening socket");
+        error("ERROR opening socket");
     }
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int)) < 0)
     {
@@ -38,7 +34,7 @@ void run_blocking_server(int portno)
 
     if (bind(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
     {
-        error_server("ERROR on binding");
+        error("ERROR on binding");
     }
     listen(sockfd, 5);
     clilen = sizeof(cli_addr);
@@ -46,14 +42,14 @@ void run_blocking_server(int portno)
 
     if (newsockfd < 0)
     {
-        error_server("ERROR on accept");
+        error("ERROR on accept");
     }
     bzero(buffer, 256);
     err_code = read(newsockfd, buffer, 255);
 
     if (err_code < 0)
     {
-        error_server("ERROR reading from socket");
+        error("ERROR reading from socket");
     }
     printf("Message: %s\n", buffer);
 
@@ -61,12 +57,11 @@ void run_blocking_server(int portno)
 
     if (err_code < 0)
     {
-        error_server("ERROR writing to socket");
+        error("ERROR writing to socket");
     }
 
     close(newsockfd);
     close(sockfd);
-    printf("close servers");
 }
 
 // int main(int argc, char* argv[])
