@@ -12,7 +12,7 @@ void run_unix_server(char* socket_path)
     int sockfd, newsockfd, servlen, n;
     socklen_t clilen;
     struct sockaddr_un cli_addr, serv_addr;
-    char buffer[80];
+    char buffer[90];
 
     if ((sockfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
     {
@@ -27,6 +27,7 @@ void run_unix_server(char* socket_path)
     {
         error("binding socket");
     }
+    is_socket_file_created++;
 
     listen(sockfd, 5);
     clilen = sizeof(cli_addr);
@@ -35,14 +36,16 @@ void run_unix_server(char* socket_path)
     {
         error("accepting");
     }
-    //bzero(buffer, 80);
-    n = read(newsockfd, buffer, 80);
 
-    printf("s %s\n", buffer);
-
-    //write(1, buffer, n);
-    //write(newsockfd, "ACK true", 8);
-
+    int i = 0;
+    while (i < iteration_num)
+    {
+        bzero(buffer,90);
+        read(newsockfd, buffer, 90);
+        //write(newsockfd, "ACK", 3);
+        //printf("%d %s\n", i, buffer);
+        ++i;
+    }
     close(newsockfd);
     close(sockfd);
 }

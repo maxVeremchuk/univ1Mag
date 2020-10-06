@@ -8,11 +8,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-void run_blocking_server(int portno)
+void run_inet_server(int portno)
 {
     int sockfd, newsockfd;
     socklen_t clilen;
-    char buffer[256];
+    char buffer[90];
     struct sockaddr_in serv_addr, cli_addr;
     int err_code;
 
@@ -44,20 +44,14 @@ void run_blocking_server(int portno)
     {
         error("ERROR on accept");
     }
-    bzero(buffer, 256);
-    err_code = read(newsockfd, buffer, 255);
 
-    if (err_code < 0)
+    int i = 0;
+    while (i < iteration_num)
     {
-        error("ERROR reading from socket");
-    }
-    printf("Message: %s\n", buffer);
-
-    err_code = write(newsockfd, "ACK true", 8);
-
-    if (err_code < 0)
-    {
-        error("ERROR writing to socket");
+        read(newsockfd, buffer, 90);
+        write(newsockfd, "ACK", 3);
+        //printf("%s\n", buffer);
+        ++i;
     }
 
     close(newsockfd);
@@ -71,8 +65,10 @@ void run_blocking_server(int portno)
 //         fprintf(stderr, "ERROR, no port provided\n");
 //         exit(1);
 //     }
-
-//     run_blocking_server(atoi(argv[1]));
-
+//     time_t start, end;
+//     start = clock();
+//     run_inet_server(atoi(argv[1]));
+//      end = clock();
+//     printf("Time passed: %f\n", ((double)(end - start)) / CLOCKS_PER_SEC);
 //     return 0;
 // }

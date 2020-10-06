@@ -9,13 +9,13 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-void run_blocking_client(char* host_name, int portno, char *message)
+void run_inet_client(char* host_name, int portno, char* message)
 {
     int sockfd, n;
     struct sockaddr_in serv_addr;
     struct hostent* server;
+    char buffer[90];
 
-    char buffer[256];
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
     {
@@ -36,18 +36,14 @@ void run_blocking_client(char* host_name, int portno, char *message)
         error("ERROR connecting");
     }
 
-    n = write(sockfd, message, strlen(message));
-    if (n < 0)
+    int i = 0;
+    while (i < iteration_num)
     {
-        error("ERROR writing to socket");
+        write(sockfd, message, strlen(message));
+        read(sockfd, buffer, strlen(buffer));
+        //printf("%s", buffer);
+        ++i;
     }
-    bzero(buffer, 256);
-    n = read(sockfd, buffer, 255);
-    if (n < 0)
-    {
-        error("ERROR reading from socket");
-    }
-    printf("%s\n", buffer);
     close(sockfd);
 }
 
@@ -59,7 +55,7 @@ void run_blocking_client(char* host_name, int portno, char *message)
 //         exit(0);
 //     }
 
-//     run_blocking_client(argv[1], atoi(argv[2]), "d");
+//     run_inet_client(argv[1], atoi(argv[2]), "d");
 
 //     return 0;
 // }

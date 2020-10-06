@@ -7,6 +7,10 @@
 
 pthread_barrier_t  barrier;
 
+int is_socket_file_created = 0;
+
+const int iteration_num = 100000;
+
 void error(const char* msg)
 {
     perror(msg);
