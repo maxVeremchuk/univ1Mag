@@ -12,7 +12,7 @@ void run_inet_server(int portno)
 {
     int sockfd, newsockfd;
     socklen_t clilen;
-    char buffer[90];
+    char buffer[c_buf_size];
     struct sockaddr_in serv_addr, cli_addr;
     int err_code;
 
@@ -48,9 +48,9 @@ void run_inet_server(int portno)
     int i = 0;
     while (i < iteration_num)
     {
-        read(newsockfd, buffer, 90);
+        bzero(buffer, c_buf_size);
+        read(newsockfd, buffer, c_buf_size);
         write(newsockfd, "ACK", 3);
-        //printf("%s\n", buffer);
         ++i;
     }
 

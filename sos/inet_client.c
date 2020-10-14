@@ -14,7 +14,7 @@ void run_inet_client(char* host_name, int portno, char* message)
     int sockfd, n;
     struct sockaddr_in serv_addr;
     struct hostent* server;
-    char buffer[90];
+    char buffer[c_buf_size];
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
@@ -40,8 +40,9 @@ void run_inet_client(char* host_name, int portno, char* message)
     while (i < iteration_num)
     {
         write(sockfd, message, strlen(message));
-        read(sockfd, buffer, strlen(buffer));
-        //printf("%s", buffer);
+        bzero(buffer, c_buf_size);
+        read(sockfd, buffer, c_buf_size);
+        //printf("%s\n", buffer);
         ++i;
     }
     close(sockfd);

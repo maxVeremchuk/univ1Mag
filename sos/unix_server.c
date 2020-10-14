@@ -12,7 +12,7 @@ void run_unix_server(char* socket_path)
     int sockfd, newsockfd, servlen, n;
     socklen_t clilen;
     struct sockaddr_un cli_addr, serv_addr;
-    char buffer[90];
+    char buffer[c_buf_size];
 
     if ((sockfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
     {
@@ -21,6 +21,7 @@ void run_unix_server(char* socket_path)
 
     bzero((char*)&serv_addr, sizeof(serv_addr));
     serv_addr.sun_family = AF_UNIX;
+    snprintf(serv_addr.sun_path, 108, socket_path);
     strcpy(serv_addr.sun_path, socket_path);
     servlen = strlen(serv_addr.sun_path) + sizeof(serv_addr.sun_family);
     if (bind(sockfd, (struct sockaddr*)&serv_addr, servlen) < 0)
@@ -40,10 +41,9 @@ void run_unix_server(char* socket_path)
     int i = 0;
     while (i < iteration_num)
     {
-        bzero(buffer,90);
-        read(newsockfd, buffer, 90);
-        //write(newsockfd, "ACK", 3);
-        //printf("%d %s\n", i, buffer);
+        bzero(buffer, c_buf_size);
+        read(newsockfd, buffer, c_buf_size);
+        write(newsockfd, "ACK", 3);
         ++i;
     }
     close(newsockfd);

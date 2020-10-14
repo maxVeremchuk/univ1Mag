@@ -10,12 +10,11 @@
 void run_unix_client(char* socket_path, char* message)
 {
     struct sockaddr_un serv_addr;
-    char buffer[90];
+    char buffer[c_buf_size];
     int sockfd, n;
 
     while (!is_socket_file_created)
         ;
-
 
     if ((sockfd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
     {
@@ -33,10 +32,9 @@ void run_unix_client(char* socket_path, char* message)
     int i = 0;
     while (i < iteration_num)
     {
-        bzero(buffer,90);
         write(sockfd, message, strlen(message));
-        //read(sockfd, buffer, strlen(buffer));
-        //printf("ccc %d  %s\n", i, buffer);
+        bzero(buffer, c_buf_size);
+        read(sockfd, buffer, c_buf_size);
         ++i;
     }
     close(sockfd);
