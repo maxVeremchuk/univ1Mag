@@ -95,7 +95,6 @@ void run_async_server_manager()
 
 void run_async_client_manager()
 {
-    sleep(1);
     run_async_client(hostname, portno, message);
 }
 
@@ -105,13 +104,9 @@ void run_async_sockets()
 
     pthread_create(&thread1, NULL, run_async_server_manager, NULL);
     pthread_create(&thread2, NULL, run_async_client_manager, NULL);
-    //pthread_create(&thread3, NULL, run_async_client_manager, NULL);
-    //pthread_create(&thread4, NULL, run_async_client_manager, NULL);
 
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
-    //pthread_join(thread3, NULL);
-    //pthread_join(thread4, NULL);
 }
 
 int main(int argc, char* argv[])
@@ -120,25 +115,25 @@ int main(int argc, char* argv[])
 
     time_t start, end;
 
-    // start = clock();
-    // run_unix_sockets();
-    // end = clock();
-    // printf("Time passed unix: %f\n", ((double)(end - start)) / CLOCKS_PER_SEC);
+    start = clock();
+    run_unix_sockets();
+    end = clock();
+    printf("Time passed unix: %f\n", ((double)(end - start)) / CLOCKS_PER_SEC);
 
-    // start = clock();
-    // run_inet_sockets();
-    // end = clock();
-    // printf("Time passed inet: %f\n", ((double)(end - start)) / CLOCKS_PER_SEC);
+    start = clock();
+    run_inet_sockets();
+    end = clock();
+    printf("Time passed inet: %f\n", ((double)(end - start)) / CLOCKS_PER_SEC);
 
-    // start = clock();
-    // run_nonblock_sockets();
-    // end = clock();
-    // printf("Time passed non block 3 clients: %f\n", ((double)(end - start)) / CLOCKS_PER_SEC);
+    start = clock();
+    run_nonblock_sockets();
+    end = clock();
+    printf("Time passed non block: %f\n", ((double)(end - start)) / (3 * CLOCKS_PER_SEC));
 
     start = clock();
     run_async_sockets();
     end = clock();
-    printf("Time passed async 3 clients: %f\n", ((double)(end - start)) / CLOCKS_PER_SEC);
+    printf("Time passed async: %f\n", ((double)(end - start)) / CLOCKS_PER_SEC);
 
     if (remove(socket_path))
     {
