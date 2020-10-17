@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <time.h>
 
 #define R(x, n) (((x) << (n)) | ((x) >> (32 - (n))))
 
@@ -89,6 +90,8 @@ int main(int argc, char* argv[])
     {
         plaintext[i] = (uint8_t)argv[2][i];
     }
+    time_t start, end;
+    start = clock();
 
     salsa20(plaintext, sizeof(plaintext), key, nonce);
     int i;
@@ -101,6 +104,9 @@ int main(int argc, char* argv[])
 
     salsa20(plaintext, sizeof(plaintext), key, nonce);
     printf("%s", plaintext);
+
+    end = clock();
+    printf("\nSalsa time %f", ((double)(end - start)) / CLOCKS_PER_SEC); // Salsa time 0.000156
 
     return 0;
 }

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define ARRSIZE 256
 
@@ -67,6 +68,8 @@ int main(int argc, char* argv[])
         printf("Usage: %s <key> <plaintext>", argv[0]);
         return -1;
     }
+    time_t start, end;
+    start = clock();
 
     unsigned char* ciphertext = malloc(sizeof(int) * strlen(argv[2]));
     RC4(argv[1], argv[2], ciphertext);
@@ -81,6 +84,9 @@ int main(int argc, char* argv[])
     RC4(argv[1], ciphertext, plaintext);
 
     printf("%s\n", plaintext);
+
+    end = clock();
+    printf("\nRC4 time %f", ((double)(end - start)) / CLOCKS_PER_SEC); // RC4 time 0.001559
 
     return 0;
 }

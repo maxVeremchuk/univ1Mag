@@ -79,13 +79,13 @@ void ECB()
         }
         encryption(state, w);
 
-        for (int i = 0; i < BLOCK_SIZE; ++i)
-        {
-            for (int j = 0; j < BLOCK_SIZE; ++j)
-            {
-                printf("%02hhx ", state[j][i]);
-            }
-        }
+        // for (int i = 0; i < BLOCK_SIZE; ++i)
+        // {
+        //     for (int j = 0; j < BLOCK_SIZE; ++j)
+        //     {
+        //         printf("%02hhx ", state[j][i]);
+        //     }
+        // }
     }
 }
 
@@ -133,13 +133,13 @@ void CBC()
         key_schedule(w, key);
         encryption(state, w);
 
-        for (int i = 0; i < BLOCK_SIZE; ++i)
-        {
-            for (int j = 0; j < BLOCK_SIZE; ++j)
-            {
-                printf("%02hhx ", state[j][i]);
-            }
-        }
+        // for (int i = 0; i < BLOCK_SIZE; ++i)
+        // {
+        //     for (int j = 0; j < BLOCK_SIZE; ++j)
+        //     {
+        //         printf("%02hhx ", state[j][i]);
+        //     }
+        // }
         for (int i = 0; i < BLOCK_SIZE; ++i)
         {
             for (int j = 0; j < BLOCK_SIZE; ++j)
@@ -215,13 +215,13 @@ void CFB()
             }
         }
 
-        for (int i = 0; i < SMALL_BLOCK_SIZE; ++i)
-        {
-            for (int j = 0; j < SMALL_BLOCK_SIZE; ++j)
-            {
-                printf("%02hhx ", state[j][i]);
-            }
-        }
+        // for (int i = 0; i < SMALL_BLOCK_SIZE; ++i)
+        // {
+        //     for (int j = 0; j < SMALL_BLOCK_SIZE; ++j)
+        //     {
+        //         printf("%02hhx ", state[j][i]);
+        //     }
+        // }
 
         for (int i = 0; i < BLOCK_SIZE; ++i)
         {
@@ -311,13 +311,13 @@ void OFB()
             }
         }
 
-        for (int i = 0; i < BLOCK_SIZE; ++i)
-        {
-            for (int j = 0; j < BLOCK_SIZE; ++j)
-            {
-                printf("%02hhx ", state[j][i]);
-            }
-        }
+        // for (int i = 0; i < BLOCK_SIZE; ++i)
+        // {
+        //     for (int j = 0; j < BLOCK_SIZE; ++j)
+        //     {
+        //         printf("%02hhx ", state[j][i]);
+        //     }
+        // }
     }
 }
 
@@ -375,29 +375,69 @@ void CTR()
             }
         }
 
-        for (int i = 0; i < BLOCK_SIZE; ++i)
-        {
-            for (int j = 0; j < BLOCK_SIZE; ++j)
-            {
-                printf("%02hhx ", state[j][i]);
-            }
-        }
+        // for (int i = 0; i < BLOCK_SIZE; ++i)
+        // {
+        //     for (int j = 0; j < BLOCK_SIZE; ++j)
+        //     {
+        //         printf("%02hhx ", state[j][i]);
+        //     }
+        // }
     }
 }
 
 int main()
 {
+    time_t start, end;
     // time_measurement();
     printf("\n-----------ECB-----------\n");
+    start = clock();
     ECB();
+    end = clock();
+    printf("\nECB time %f", ((double)(end - start)) / CLOCKS_PER_SEC);
+
     printf("\n-----------CBC-----------\n");
+    start = clock();
     CBC();
+    end = clock();
+    printf("\nCBC time %f", ((double)(end - start)) / CLOCKS_PER_SEC);
+
     printf("\n-----------CFB-----------\n");
+    start = clock();
     CFB();
+    end = clock();
+    printf("\nCFB time %f", ((double)(end - start)) / CLOCKS_PER_SEC);
+
     printf("\n-----------OFB-----------\n");
+    start = clock();
     OFB();
+    end = clock();
+    printf("\nOFB time %f", ((double)(end - start)) / CLOCKS_PER_SEC);
+
     printf("\n-----------CTR-----------\n");
+    start = clock();
     CTR();
+    end = clock();
+    printf("\nCTR time %f", ((double)(end - start)) / CLOCKS_PER_SEC);
+
     printf("\n-----------END-----------\n");
+
     return 0;
 }
+
+
+// -----------ECB-----------
+
+// ECB time 0.007995
+// -----------CBC-----------
+
+// CBC time 0.010319
+// -----------CFB-----------
+
+// CFB time 0.039139
+// -----------OFB-----------
+
+// OFB time 0.009931
+// -----------CTR-----------
+
+// CTR time 0.008306
+// -----------END-----------
