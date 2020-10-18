@@ -102,11 +102,15 @@ void run_async_sockets()
 {
     pthread_t thread1, thread2, thread3, thread4;
 
-    pthread_create(&thread1, NULL, run_async_server_manager, NULL);
-    pthread_create(&thread2, NULL, run_async_client_manager, NULL);
+    pthread_create(&thread1, NULL, run_nonblock_server_manager, NULL);
+    pthread_create(&thread2, NULL, run_nonblock_client_manager, NULL);
+    pthread_create(&thread3, NULL, run_nonblock_client_manager, NULL);
+    pthread_create(&thread4, NULL, run_nonblock_client_manager, NULL);
 
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
+    pthread_join(thread3, NULL);
+    pthread_join(thread4, NULL);
 }
 
 int main(int argc, char* argv[])
@@ -133,7 +137,7 @@ int main(int argc, char* argv[])
     start = clock();
     run_async_sockets();
     end = clock();
-    printf("Time passed async: %f\n", ((double)(end - start)) / CLOCKS_PER_SEC);
+    printf("Time passed async: %f\n", ((double)(end - start)) / (3 * CLOCKS_PER_SEC));
 
     if (remove(socket_path))
     {
