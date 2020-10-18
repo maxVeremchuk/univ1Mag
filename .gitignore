@@ -2,3 +2,4 @@
 .clang-format
 **/build
 .vscode
+*.sh
