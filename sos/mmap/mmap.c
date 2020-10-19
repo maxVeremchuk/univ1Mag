@@ -15,7 +15,7 @@ void write_mmap_sample_data()
     int fd;
     char ch;
     struct stat textfilestat;
-    fd = open("MMAP_DATA.txt", O_CREAT | O_TRUNC | O_WRONLY, 0666);
+    fd = open(c_file_name, O_CREAT | O_TRUNC | O_WRONLY, 0666);
     if (fd == -1)
     {
         perror("File open error ");
@@ -37,13 +37,13 @@ void read_mmap_sample_data()
     int fd;
     int unmapstatus;
 
-    if (stat("MMAP_DATA.txt", &mmapstat) == -1)
+    if (stat(c_file_name, &mmapstat) == -1)
     {
         perror("stat failure");
         exit(1);
     }
 
-    if ((fd = open("MMAP_DATA.txt", O_RDONLY)) == -1)
+    if ((fd = open(c_file_name, O_RDONLY)) == -1)
     {
         perror("open failure");
         exit(1);
@@ -68,7 +68,10 @@ void read_mmap_sample_data()
         exit(1);
     }
     close(fd);
-    system("rm -f MMAP_DATA.txt");
+    if (remove(c_file_name))
+    {
+        perror("File deletion");
+    }
 }
 
 int main()
