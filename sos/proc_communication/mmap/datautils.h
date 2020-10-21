@@ -50,4 +50,4 @@ const char* c_message =
     "messagelong messagelong messagelong messagelong messagelong messagelong messagelong "
     "messagelong messagelong messagelong messagelong messagelong messagelong messagelong "
     "messagelong messagelong messagelong messagelong messagelong messagelong messagelong "
-    "messagelong messagelong messagelong messagelong messagelong messagelong message";
+    "messagelong messagelong messagelong messagelong messagelong messagelong messagelong ";

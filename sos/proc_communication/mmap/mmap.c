@@ -79,7 +79,7 @@ int main()
     time_t start, end;
 
     start = clock();
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 100000; i++)
     {
         write_mmap_sample_data();
         read_mmap_sample_data();
