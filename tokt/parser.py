@@ -105,13 +105,15 @@ def calclulate_rpn(rpn):
         else:
             raise Exception("Unknown exception")
 
+    if len(stack) > 1:
+        raise Exception("Wrong number order")
     return stack.pop()
 
 
 if __name__ == "__main__":
 
     formulas = ["2*sin(1/(exp(3.5*x))+1)-tg(x+PI/2)",
-                "1+sin(2*sin(E*x)/exp(tg(pow(4, 5)+(pow(4, 5)))-6*7*8))-9*tg(abs(10-cos(PI+E))*sqrt(abs(tg(11+PI)+tg(12))))",
+                "1+sin(2.9*sin(E*x)/exp(tg(pow(4,5)+(pow(4,5)))-6*7*8))-9*tg(abs(10-cos(PI+E))*sqrt(abs(tg(11+PI)+tg(12))))",
                 "sin(x)",
                 "1+sin(tg(2)))",
                 "1+sin((tg(2))",
@@ -119,12 +121,13 @@ if __name__ == "__main__":
                 "1+sin(tg(2))*pow(0, 0)",
                 "1+sqrt(6-3*4)",
                 "1+sqt(6-4)",
-                "sqrt(abs(x))"]
+                "sqrt(abs(x))",
+                "1.2.3*x",]
 
     for formula in formulas:
         try:
             plt.plot(make_tabulation(
-                parse_formula_to_rpn(tokenize(formula)), -6, 6))
+                parse_formula_to_rpn(tokenize(formula)), -6, 6, 0.01))
             plt.show()
         except Exception as e:
             print(e)
