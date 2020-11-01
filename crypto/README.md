@@ -26,8 +26,8 @@ RC4 time 2.476481<br />
 <br />
 <hr>
 HASH<br />
-sha256 PoW(3 bits): 20.757338
-kupyna PoW(3 bits): 78.834799
+sha256 PoW(3 bits): 20.757338<br />
+kupyna PoW(3 bits): 78.834799<br />
 <hr>
 <br />
 RSA<br />
