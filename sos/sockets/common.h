@@ -6,7 +6,7 @@
 
 int is_socket_file_created = 0;
 
-const int iteration_num = 10000;
+const int iteration_num = 100000;
 const int c_buf_size = 90;
 
 void error(const char* msg)

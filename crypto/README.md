@@ -21,3 +21,17 @@ CTR time 5.576449<br />
 
 Salsa time 1.838157<br />
 RC4 time 2.476481<br />
+<br />
+
+HASH<br />
+sha256 PoW(3 bits): 20.757338
+kupyna PoW(3 bits): 78.834799
+
+<br />
+RSA<br />
+message: 1234567<br />
+1024 bit primes: 1.81671 s
+896 bit primes:  1.29366 s
+768 bit primes:  0.087505 s
+640 bit primes:  0.060058 s
+512 bit primes:  0.036638 s

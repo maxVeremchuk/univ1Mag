@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "sha256.h"
 
 int proof_of_work(int partial_colision_num)
@@ -16,8 +17,6 @@ int proof_of_work(int partial_colision_num)
     BYTE init_text[] = {"Hello world!"};
     BYTE tries_char[1000];
 
-
-
     while (1)
     {
         BYTE text[1000];
@@ -31,15 +30,8 @@ int proof_of_work(int partial_colision_num)
         {
             return 1;
         }
-        if (!memcmp(zero_hash, buf, 3))
-        {
-            printf("4 collision \n");
-        }
-        if (!memcmp(zero_hash, buf, 4))
-        {
-            printf("4 collision \n");
-        }
-        if(tries % 1000000 == 0)
+
+        if (tries % 1000000 == 0)
         {
             printf("%s \n", text);
         }
@@ -54,7 +46,12 @@ int proof_of_work(int partial_colision_num)
 
 int main()
 {
-    proof_of_work(10);
+    time_t start, end;
+    start = clock();
 
+    proof_of_work(3);
+
+    end = clock();
+    printf("%f  ", ((double)(end - start)) / CLOCKS_PER_SEC); // 20.757338
     return (0);
 }
