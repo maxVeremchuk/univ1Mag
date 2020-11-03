@@ -20,7 +20,7 @@ int main()
 
     if ((pid = fork()) > 0)
     {
-        for (int i = 0; i < 100000; i++)
+        for (int i = 0; i < 1000000; i++)
         {
             write(p[1], c_message, strlen(c_message));
         }

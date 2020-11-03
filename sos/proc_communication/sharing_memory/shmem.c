@@ -43,7 +43,7 @@ void write_shared_memory_data()
 
     bufptr = shmp->buf;
     spaceavailable = BUF_SIZE;
-    for (numtimes = 0; numtimes < 100000; numtimes++)
+    for (numtimes = 0; numtimes < 1000000; numtimes++)
     {
         strcpy(bufptr, c_message);
         shmp->cnt = strlen(bufptr);

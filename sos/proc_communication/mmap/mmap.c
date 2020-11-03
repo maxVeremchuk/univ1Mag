@@ -58,7 +58,7 @@ void read_mmap_sample_data()
     minbyteindex = 0;
     maxbyteindex = mmapstat.st_size - 1;
 
-    printf("%s\n", data);
+    //printf("%s\n", data);
 
     unmapstatus = munmap(data, mmapstat.st_size);
 
