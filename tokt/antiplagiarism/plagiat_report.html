@@ -2,14 +2,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Plagiarizm report</title>
+<title>Plagiarism report</title>
 </head>
 <style>
-.tooltip {
-  position: relative;
-  display: inline-block;
-  font-family: Helvetica, sans-serif;
+
+body {
+    font-family: Helvetica, sans-serif;
+    background: #222;
+    margin: 0;
+    color: lightgray;
+    height:100%
 }
+
+.module-border-wrap {
+    padding: 1rem;
+    background: linear-gradient(to right, red, purple);
+    padding: 2px;
+}
+
+.module {
+  background: #222;
+  padding: 2rem;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
 
 .tooltip .tooltiptext {
   visibility: hidden;
@@ -34,33 +54,100 @@
   border-width: 5px;
   border-style: solid;
   border-color: transparent transparent black transparent;
+
 }
 
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
-</style>
-<body">
 
-<div class="tooltip">
-    <p style = "background-color:#ff0000; text-indent: 40px;">Google assigns a numeric weighting from 0-10 for each webpage on the Internet; this PageRank denotes a site’s importance in the eyes of Google. The PageRank is derived from a theoretical probability value on a logarithmic scale like the Richter Scale. The PageRank of a particular page is roughly based upon the quantity of inbound links as well as the PageRank of the pages providing the links. It is known that other factors, e.g. relevance of search words on the page and actual visits to the page reported by the Google toolbar also influence the PageRank. In order to prevent manipulation, spoofing and Spamdexing, Google provides no specific details about how other factors influence PageRank.
+.paragraph {
+    border-radius: 10px;
+    text-indent: 40px;
+    padding: 3px;
+}
+
+hr {
+    border: none;
+    color: purple;
+    background-color: purple;
+    height: 2px;
+    width: 400px;
+}
+
+</style>
+<body>
+    <div class="module-border-wrap">
+        <div class="module">
+            <h1 style="text-align:center">Plagiarism report</h1>
+            <hr>
+
+<div class="tooltip ">
+        <p class="paragraph" style = "background:rgba(255,00,00, .4); border: 2px solid rgba(255,00,00, 1); ">Google assigns a numeric weighting from 0-10 for each webpage on the Internet; this PageRank denotes a site’s importance in the eyes of Google. The PageRank is derived from a theoretical probability value on a logarithmic scale like the Richter Scale. The PageRank of a particular page is roughly based upon the quantity of inbound links as well as the PageRank of the pages providing the links. It is known that other factors, e.g. relevance of search words on the page and actual visits to the page reported by the Google toolbar also influence the PageRank. In order to prevent manipulation, spoofing and Spamdexing, Google provides no specific details about how other factors influence PageRank.
 Lots of academic papers concerning PageRank published since Page's original paper. In practice, the PageRank concept has proven to be vulnerable to manipulation, and extensive research has been devoted to identifying falsely inflated PageRank and ways to ignore links from documents with falsely inflated PageRank.
 Other ranking algorithms for Web pages include the HITS algorithm invented by Jon Kleinberg (used by Teoma and now Ask.com), the IBM CLEVER project, and the TrustRank algorithm.</p>
-    <span class="tooltiptext">Original percent: 0%<br>Task type: b<br>Plagiat type: Copypasted</span>
+        <span class="tooltiptext">Original percent: 0%<br>Task type: b<br>Plagiat type: Copypasted</span>
 </div>
 <br>
 
-<div class="tooltip">
-    <p style = "background-color:#ff0000; text-indent: 40px;">To say that a problem has overlapping subproblems is to say that the same subproblems are used to solve many different larger problems. For example, in the Fibonacci sequence, F3 = F1 + F2 and F4 = F2 + F3 — computing each number involves computing F2. Because both F3 and F4 are needed to compute F5, a naive approach to computing F5 may end up computing F2 twice or more. This applies whenever overlapping subproblems are present: a naive approach may waste time recomputing optimal solutions to subproblems it has already solved.</p>
-    <span class="tooltiptext">Original percent: 0%<br>Task type: e<br>Plagiat type: Copypasted</span>
+<div class="tooltip ">
+        <p class="paragraph" style = "background:rgba(90,165,00, .4); border: 2px solid rgba(90,165,00, 1); ">The PageRank algorithm outputs a probability distribution used to represent the likelihood that a person randomly clicking on links will arrive at any particular page. PageRank can be calculated for collections of documents of any size.</p>
+        <span class="tooltiptext">Original percent: 64%<br>Task type: -<br>Plagiat type: Non plagiat</span>
 </div>
 <br>
 
-<div class="tooltip">
-    <p style = "background-color:#34cb00; text-indent: 40px;">simle text not plagiarized simle text not plagiarized simle text not plagiarized simle text not plagiarized </p>
-    <span class="tooltiptext">Original percent: 79%<br>Task type: -<br>Plagiat type: Non pagiat</span>
+<div class="tooltip ">
+        <p class="paragraph" style = "background:rgba(232,23,00, .4); border: 2px solid rgba(232,23,00, 1); ">The PageRank algorithm outputs a probability distribution used to other ranking algorithms for Web pages include the HITS algorithm at any particular page. Page's original paper. In practice, the PageRank</p>
+        <span class="tooltiptext">Original percent: 9%<br>Task type: b<br>Plagiat type: Heavily paraphrased</span>
 </div>
 <br>
 
+<div class="tooltip ">
+        <p class="paragraph" style = "background:rgba(184,71,00, .4); border: 2px solid rgba(184,71,00, 1); ">The PageRank algorithm outputs a probability distribution used to Web pages the HITS algorithm at any particular page. Page's original paper. In practice</p>
+        <span class="tooltiptext">Original percent: 27%<br>Task type: b<br>Plagiat type: Heavily paraphrased</span>
+</div>
+<br>
+
+<div class="tooltip ">
+        <p class="paragraph" style = "background:rgba(105,150,00, .4); border: 2px solid rgba(105,150,00, 1); ">The PageRank simle text not plagiarized algorithm outputs a simle text not plagiarized probability distribution used to Web pages the HITS algorithm simle text not plagiarized at any particular page. Page's original paper. In practice</p>
+        <span class="tooltiptext">Original percent: 58%<br>Task type: -<br>Plagiat type: Non plagiat</span>
+</div>
+<br>
+
+<div class="tooltip ">
+        <p class="paragraph" style = "background:rgba(255,00,00, .4); border: 2px solid rgba(255,00,00, 1); ">To say that a problem has overlapping subproblems is to say that the same subproblems are used to solve many different larger problems. For example, in the Fibonacci sequence, F3 = F1 + F2 and F4 = F2 + F3 — computing each number involves computing F2. Because both F3 and F4 are needed to compute F5, a naive approach to computing F5 may end up computing F2 twice or more. This applies whenever overlapping subproblems are present: a naive approach may waste time recomputing optimal solutions to subproblems it has already solved.</p>
+        <span class="tooltiptext">Original percent: 0%<br>Task type: e<br>Plagiat type: Copypasted</span>
+</div>
+<br>
+
+<div class="tooltip ">
+        <p class="paragraph" style = "background:rgba(240,15,00, .4); border: 2px solid rgba(240,15,00, 1); ">Other ranking algorithms for some Web pages contains the special algorithm invented Jon Kleinberg (by Teoma and now Ask.com), the IBM CLEVER project, and the TrustRank algorithm.</p>
+        <span class="tooltiptext">Original percent: 6%<br>Task type: b<br>Plagiat type: Copypasted</span>
+</div>
+<br>
+
+<div class="tooltip ">
+        <p class="paragraph" style = "background:rgba(244,11,00, .4); border: 2px solid rgba(244,11,00, 1); ">Bayes' theorem forms a relationship between the probabilities
+events A and B. Intuitively, Bayes' theorem in this form describes the
+way in which one's recognition of 'A' are updated by having observed
+'B'.</p>
+        <span class="tooltiptext">Original percent: 4%<br>Task type: d<br>Plagiat type: Lightly paraphrased</span>
+</div>
+<br>
+
+<div class="tooltip ">
+        <p class="paragraph" style = "background:rgba(52,203,00, .4); border: 2px solid rgba(52,203,00, 1); ">simle text not plagiarized simle text not plagiarized simle text not plagiarized simle text not plagiarized
+</p>
+        <span class="tooltiptext">Original percent: 79%<br>Task type: -<br>Plagiat type: Non plagiat</span>
+</div>
+<br>
+
+<hr>
+<div>
+    <h3 style = "text-indent: 40px;">Document originality average: 27%</h3>
+</div>
+
+        </div>
+    </div>
 </body>
 </html> 
