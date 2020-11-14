@@ -94,6 +94,11 @@ g4pE_taskb.txt,b,light
 g4pE_taskc.txt,c,cut
 g4pE_taskd.txt,d,non
 g4pE_taske.txt,e,non
+g5pA_taska.txt,a,non
+g5pA_taskb.txt,b,non
+g5pA_taskc.txt,c,non
+g5pA_taskd.txt,d,non
+g5pA_taske.txt,e,non
 orig_taska.txt,a,orig
 orig_taskb.txt,b,orig
 orig_taskc.txt,c,orig
