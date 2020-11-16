@@ -134,7 +134,7 @@ int main()
     init_prime_digit();
     struct public_key* pub = new public_key(0, 0);
     struct private_key* priv = new private_key(0, 0);
-    bigint message("1234567");
+    bigint message("123456789");
     time_t start, end;
     for (int test = 0; test < prime_digits.size(); ++test)
     {

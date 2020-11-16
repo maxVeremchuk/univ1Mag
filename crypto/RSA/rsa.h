@@ -66,7 +66,7 @@ std::string q_512bit =
     "530564040652079735814517762508851897276186177362851729935712298128079"
     "315260231948521";
 
-const std::string exp_constant = "3";
+const std::string exp_constant = "17";
 
 std::vector<std::pair<std::string, std::string>> prime_digits;
 

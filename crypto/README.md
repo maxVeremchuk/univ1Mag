@@ -34,6 +34,6 @@ RSA<br />
 message: 1234567<br />
 1024 bit primes: 1.81671 s<br />
 896 bit primes:  1.29366 s<br />
-768 bit primes:  0.087505 s<br />
-640 bit primes:  0.060058 s<br />
+768 bit primes:  0.875051 s<br />
+640 bit primes:  0.600582 s<br />
 512 bit primes:  0.036638 s<br />
