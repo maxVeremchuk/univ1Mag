@@ -4,3 +4,12 @@
 .vscode
 *.sh
 **/dataset
+**/data
+**/sumdata
+**/saved_model
+*.zip
+*.txt
+*.pickle
+**/glove
+**/__pycache__
+*.tar.gz
