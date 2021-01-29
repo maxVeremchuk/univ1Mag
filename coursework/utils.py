@@ -2,6 +2,7 @@ import nltk
 import pickle
 import re
 import numpy as np
+import spacy
 
 nltk.download('stopwords')
 from nltk.corpus import stopwords
@@ -36,13 +37,18 @@ def question_to_vec(question, embeddings, dim):
     words = question.split()
     if words:
         for word in words:
-            if word in embeddings:
-                    vector += embeddings[word][:300]
-                    count += 1
+            if word in embeddings.vocab:
+                vector += embeddings.vocab[word]
+                count += 1
     if(count!=0):
         vector = vector / count
     return vector
 
+def load_embeddings():
+    """Loads pre-trained word embeddings"""
+    embeddings = spacy.load('en_core_web_lg')
+    embeddings_dim = len(embeddings.vocab['dimension'].vector)
+    return embeddings, embeddings_dim
 
 def unpickle_file(filename):
     """Returns the result of unpickling the file content."""
