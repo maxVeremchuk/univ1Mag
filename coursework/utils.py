@@ -38,7 +38,7 @@ def question_to_vec(question, embeddings, dim):
     if words:
         for word in words:
             if word in embeddings.vocab:
-                vector += embeddings.vocab[word]
+                vector += embeddings.vocab[word].vector
                 count += 1
     if(count!=0):
         vector = vector / count

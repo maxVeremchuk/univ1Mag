@@ -8,7 +8,7 @@ from utils import *
 
 class ThreadRanker(object):
     def __init__(self, paths):
-        self.word_embeddings, self.embeddings_dim = load_embeddings(paths['WORD_EMBEDDINGS'])
+        self.word_embeddings, self.embeddings_dim = load_embeddings()
         self.thread_embeddings_folder = paths['THREAD_EMBEDDINGS_FOLDER']
 
     def __load_embeddings_by_tag(self, tag_name):
@@ -22,10 +22,8 @@ class ThreadRanker(object):
         """
         thread_ids, thread_embeddings = self.__load_embeddings_by_tag(tag_name)
 
-        # HINT: you have already implemented a similar routine in the 3rd assignment.
-
         question_vec = question_to_vec(question = question, embeddings = self.word_embeddings, self.embeddings_dim)
-        best_thread = #### YOUR CODE HERE ####
+        best_thread = pairwise_distances_argmin(question_vec, thread_embeddings)
 
         return thread_ids[best_thread]
 
@@ -48,22 +46,9 @@ class DialogueManager(object):
     def __init_chitchat_bot(self):
         """Initializes self.chitchat_bot with some conversational model."""
 
-        # Hint: you might want to create and train chatterbot.ChatBot here.
-        # Create an instance of the ChatBot class.
-        # Set a trainer set_trainer(ChatterBotCorpusTrainer) for the ChatBot.
-        # Train the ChatBot with "chatterbot.corpus.english" param.
-        # Note that we use chatterbot==0.7.6 in this project.
-        # You are welcome to experiment with other versions but they might have slightly different API.
-
-        ########################
-        #### YOUR CODE HERE ####
-        ########################
-
-        # remove this when you're done
-        raise NotImplementedError(
-            "Open dialogue_manager.py and fill with your code. In case of Google Colab, download"
-            "(https://github.com/hse-aml/natural-language-processing/blob/master/project/dialogue_manager.py), "
-            "edit locally and upload using '> arrow on the left edge' -> Files -> UPLOAD")
+        chatbot = ChatBot('Ron Obvious')
+        trainer = ChatterBotCorpusTrainer(chatbot)
+        trainer.train("chatterbot.corpus.english")
 
     def generate_answer(self, question):
         """Combines stackoverflow and chitchat parts using intent recognition."""
