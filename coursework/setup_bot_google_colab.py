@@ -2,9 +2,8 @@
 # -*- coding: utf-8 -*-
 import os
 
-def download_github_code(path):
-    filename = path.rsplit("/")[-1]
-    os.system("wget https://github.com/maxVeremchuk/univ1Mag/blob/master/coursework/{} -O {}".format(path, filename))
+def download_github_code(filename):
+    os.system("wget https://github.com/maxVeremchuk/univ1Mag/blob/master/coursework/{}/?raw=true -O {}".format(filename, filename))
 
 def setup_project():
     #download_github_code("requirements_colab.txt")
