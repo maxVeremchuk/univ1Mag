@@ -1,11 +1,12 @@
+from nltk.corpus import stopwords
 import nltk
 import pickle
 import re
 import numpy as np
 import spacy
+import en_core_web_lg
 
 nltk.download('stopwords')
-from nltk.corpus import stopwords
 
 # Paths for all resources for the bot.
 RESOURCE_PATH = {
@@ -30,6 +31,7 @@ def text_prepare(text):
 
     return text.strip()
 
+
 def question_to_vec(question, embeddings, dim):
     """Transforms a string to an embedding by averaging word embeddings."""
     vector = np.zeros(dim)
@@ -40,15 +42,17 @@ def question_to_vec(question, embeddings, dim):
             if word in embeddings.vocab:
                 vector += embeddings.vocab[word].vector
                 count += 1
-    if(count!=0):
+    if(count != 0):
         vector = vector / count
     return vector
 
+
 def load_embeddings():
     """Loads pre-trained word embeddings"""
-    embeddings = spacy.load('en_core_web_lg')
+    embeddings = en_core_web_lg.load()
     embeddings_dim = len(embeddings.vocab['dimension'].vector)
     return embeddings, embeddings_dim
+
 
 def unpickle_file(filename):
     """Returns the result of unpickling the file content."""
