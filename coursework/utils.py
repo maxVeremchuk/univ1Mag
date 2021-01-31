@@ -39,9 +39,11 @@ def question_to_vec(question, embeddings, dim):
     words = question.split()
     if words:
         for word in words:
-            if word in embeddings.vocab:
+            print(np.count_nonzero(embeddings.vocab[word].vector))
+            if np.count_nonzero(embeddings.vocab[word].vector):
                 vector += embeddings.vocab[word].vector
                 count += 1
+
     if(count != 0):
         vector = vector / count
     return vector
@@ -49,6 +51,7 @@ def question_to_vec(question, embeddings, dim):
 
 def load_embeddings():
     """Loads pre-trained word embeddings"""
+    # TODO make embeddings task oriented
     embeddings = en_core_web_lg.load()
     embeddings_dim = len(embeddings.vocab['dimension'].vector)
     return embeddings, embeddings_dim
