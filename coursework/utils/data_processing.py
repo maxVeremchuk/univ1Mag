@@ -1,5 +1,6 @@
 import json
 
+from dictionary import *
 from config import *
 
 
@@ -45,6 +46,9 @@ def extract_curr_slot_domain_fertility(slots_domains, fertility, curr_turn_slots
 
 def generate_data_detail(file_name, slots_domains):
     data = []
+    global_dict = Dictionary()
+    domain_dict = Dictionary()
+    slot_dict = Dictionary()
     with open(file_name) as f:
         dials = json.load(f)
 
@@ -52,6 +56,24 @@ def generate_data_detail(file_name, slots_domains):
             dialogue_history = ""
             delex_dialogue_history = ""
             for dialogue_turn in dialogue_data["dialogue"]:
+
+                all_domains = [item.split(
+                    "-")[0]+"_DOMAIN" for item in slots_domains]
+                all_slots = [item.split(
+                    "-")[1]+"_SLOT" for item in slots_domains]
+
+                domain_dict.index_words(all_domains)
+                slot_dict.index_words(all_slots)
+
+                global_dict.index_words(all_domains)
+                global_dict.index_words(all_slots)
+
+                global_dict.index_words(dialogue_turn["transcript"])
+                global_dict.index_words(dialogue_turn["system_transcript"])
+                global_dict.index_words(dialogue_turn["delex_transcript"])
+                global_dict.index_words(
+                    dialogue_turn["delex_system_transcript"])
+
                 user_turn = SOS_token + dialogue_turn["transcript"] + EOS_token
                 system_turn = SOS_token + \
                     dialogue_turn["system_transcript"] + EOS_token
@@ -68,11 +90,6 @@ def generate_data_detail(file_name, slots_domains):
 
                 fertility, gates = extract_fertility_and_gates(
                     curr_turn_slots_dict, slots_domains)
-
-                all_domains = [item.split(
-                    "-")[0]+"_DOMAIN" for item in slots_domains]
-                all_slots = [item.split(
-                    "-")[1]+"_SLOT" for item in slots_domains]
 
                 domain_fertility, slots_fertility, slot_values = extract_curr_slot_domain_fertility(
                     slots_domains, fertility, curr_turn_slots_dict)
@@ -98,7 +115,7 @@ def generate_data_detail(file_name, slots_domains):
                     "gates": gates
                 }
                 data.append(data_detail)
-    return data
+    return data, global_dict, domain_dict, slot_dict
 
 
 def prepare_data(args):
@@ -106,8 +123,6 @@ def prepare_data(args):
     # get all sorted slots and domains
     slots_domains = sorted([k.replace(" ", "").lower()
                             for k, v in ontology.items()])
-    #slots_domains, slots, domains = extract_slot_domain_info(ontology)
-
 
     # list of data details in each dialigue
     #rain_data = generate_data_detail(train_data_path, slots_domains)
