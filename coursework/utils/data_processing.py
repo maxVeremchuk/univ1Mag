@@ -2,6 +2,7 @@ import json
 
 from dictionary import *
 from config import *
+from dataset import *
 
 
 # def extract_slot_domain_info(ontology):
@@ -44,11 +45,8 @@ def extract_curr_slot_domain_fertility(slots_domains, fertility, curr_turn_slots
     return domains, slots, values
 
 
-def generate_data_detail(file_name, slots_domains):
+def generate_data_detail(file_name, slots_domains, global_dict, domain_dict, slot_dict):
     data = []
-    global_dict = Dictionary()
-    domain_dict = Dictionary()
-    slot_dict = Dictionary()
     with open(file_name) as f:
         dials = json.load(f)
 
@@ -115,7 +113,17 @@ def generate_data_detail(file_name, slots_domains):
                     "gates": gates
                 }
                 data.append(data_detail)
-    return data, global_dict, domain_dict, slot_dict
+    return data
+
+
+def create_data_loader(data_info, global_dict, domain_dict, slot_dict, batch_size, shuffle):
+    dataset = Dataset(data_info, global_dict, domain_dict, slot_dict)
+
+    data_loader = torch.utils.data.DataLoader(dataset=dataset,
+                                              batch_size=batch_size,
+                                              shuffle=shuffle,
+                                              collate_fn=collate_fn)
+    return data_loader
 
 
 def prepare_data(args):
@@ -123,8 +131,23 @@ def prepare_data(args):
     # get all sorted slots and domains
     slots_domains = sorted([k.replace(" ", "").lower()
                             for k, v in ontology.items()])
+    global_dict = Dictionary()
+    domain_dict = Dictionary()
+    slot_dict = Dictionary()
 
     # list of data details in each dialigue
-    #rain_data = generate_data_detail(train_data_path, slots_domains)
-    dev_data = generate_data_detail(dev_data_path, slots_domains)
-    #test_data = generate_data_detail(test_data_path, slots_domains)
+    train_data = generate_data_detail(
+        train_data_path, slots_domains, global_dict, domain_dict, slot_dict)
+    dev_data = generate_data_detail(
+        dev_data_path, slots_domains, global_dict, domain_dict, slot_dict)
+    test_data = generate_data_detail(
+        test_data_path, slots_domains, global_dict, domain_dict, slot_dict)
+
+    train_data_loader = create_data_loader(
+        train_data, global_dict, domain_dict, slot_dict, args["batch_size"], False)
+    dev_data_loader = create_data_loader(
+        dev_data, global_dict, domain_dict, slot_dict, args["batch_size"], False)
+    test_data_loader = create_data_loader(
+        test_data, global_dict, domain_dict, slot_dict, args["batch_size"], False)
+
+    return train_data_loader, dev_data_loader, test_data_loader

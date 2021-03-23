@@ -71,7 +71,7 @@ def collate_fn(data):
         padded_seqs = padded_seqs.detach()
         return padded_seqs
 
-    data.sort(key=lambda x: len(x['context']), reverse=True)
+    data.sort(key=lambda x: len(x['dialogue_history']), reverse=True)
     item_info = {}
     for key in data[0].keys():
         item_info[key] = [d[key] for d in data]
@@ -79,7 +79,19 @@ def collate_fn(data):
 
     dialogue_history = merge(item_info['dialogue_history'], PAD_token_id)
     delex_dialogue_history = merge(item_info['delex_dialogue_history'], PAD_token_id)
-    delex_dialogue_history = merge(item_info['delex_dialogue_history'], PAD_token_id)
-    delex_dialogue_history = merge(item_info['delex_dialogue_history'], PAD_token_id)
-    delex_dialogue_history = merge(item_info['delex_dialogue_history'], PAD_token_id)
+    domain_fertility = merge(item_info['domain_fertility'], PAD_token_id)
+    slots_fertility = merge(item_info['slots_fertility'], PAD_token_id)
+    slot_values = merge(item_info['slot_values'], PAD_token_id)
+    fertility = merge(item_info['fertility'], PAD_token_id)
+    gates = merge(item_info['gates'], GATES['none'])
+
+    item_info['dialogue_history'] = dialogue_history
+    item_info['delex_dialogue_history'] = delex_dialogue_history
+    item_info['domain_fertility'] = domain_fertility
+    item_info['slots_fertility'] = slots_fertility
+    item_info['slot_values'] = slot_values
+    item_info['fertility'] = fertility
+    item_info['gates'] = gates
+
+    return item_info
 
