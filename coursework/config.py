@@ -11,6 +11,6 @@ EOS_token = ' EOS '
 train_data_path = 'data/train_dials.json'
 dev_data_path = 'data/dev_dials.json'
 test_data_path = 'data/test_dials.json'
-onology_path = 'data/ontology.json'
+ontology_path = 'data/ontology.json'
 
 GATES = {"gen": 0, "dontcare": 1, "none": 2}

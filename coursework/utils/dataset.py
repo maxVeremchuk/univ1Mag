@@ -12,7 +12,7 @@ class Dataset(data.Dataset):
 
     def __getitem__(self, index):
         data_info = self.data_info_list[index]
-        id = data_info['id']
+        id = data_info['dialogue_id']
         turn_id = data_info['turn_id']
         dialogue_history = self.convert_to_index(data_info['dialogue_history'], self.global_dictionary.word2index)
         delex_dialogue_history = self.convert_to_index(data_info['delex_dialogue_history'], self.global_dictionary.word2index)
@@ -20,7 +20,7 @@ class Dataset(data.Dataset):
         all_slots = self.convert_to_index(data_info['slots'], self.slot_dictionay.word2index)
         domain_fertility = self.convert_to_index(data_info['domain_fertility'], self.domain_dictionary.word2index)
         slots_fertility = self.convert_to_index(data_info['slots_fertility'], self.slot_dictionay.word2index)
-        slot_values = self.convert_to_index(data_info['slot_values'], self.global_dictionary.word2index)
+        slot_values = self.convert_to_index(data_info['values_y'], self.global_dictionary.word2index)
         turn_belief = data_info['turn_belief']
         slots_domains = data_info['slots_domains']
         turn_belief_dict = data_info['turn_belief_dict']
@@ -28,11 +28,13 @@ class Dataset(data.Dataset):
         fertility = data_info['fertility']
         gates = data_info['gates']
 
+        #context == dialogue_history
+        #values_y == slot_values
         item_info = {
             "dialogue_id": id,
             "turn_id": turn_id,
-            "dialogue_history": dialogue_history,
-            "delex_dialogue_history": delex_dialogue_history,
+            "context": dialogue_history,
+            "delex_context": delex_dialogue_history,
             "domains": all_domains,
             "slots": all_slots,
             "domain_fertility": domain_fertility,
@@ -47,12 +49,14 @@ class Dataset(data.Dataset):
         }
         return item_info
 
+    def __len__(self):
+        return len(self.data_info_list)
 
     def convert_to_index(self, seq, dictionary_w2i):
         indexed_seq = []
         for word in seq:
             indexed_seq.append(dictionary_w2i[word] if word in dictionary_w2i else UNK_token_id)
-        indexed_seq = torch.Tensor(story)
+        indexed_seq = torch.Tensor(indexed_seq)
         return indexed_seq
 
 def collate_fn(data):
@@ -71,22 +75,22 @@ def collate_fn(data):
         padded_seqs = padded_seqs.detach()
         return padded_seqs
 
-    data.sort(key=lambda x: len(x['dialogue_history']), reverse=True)
+    data.sort(key=lambda x: len(x['context']), reverse=True)
     item_info = {}
     for key in data[0].keys():
         item_info[key] = [d[key] for d in data]
 
 
-    dialogue_history = merge(item_info['dialogue_history'], PAD_token_id)
-    delex_dialogue_history = merge(item_info['delex_dialogue_history'], PAD_token_id)
+    dialogue_history = merge(item_info['context'], PAD_token_id)
+    delex_dialogue_history = merge(item_info['delex_context'], PAD_token_id)
     domain_fertility = merge(item_info['domain_fertility'], PAD_token_id)
     slots_fertility = merge(item_info['slots_fertility'], PAD_token_id)
     slot_values = merge(item_info['slot_values'], PAD_token_id)
     fertility = merge(item_info['fertility'], PAD_token_id)
     gates = merge(item_info['gates'], GATES['none'])
 
-    item_info['dialogue_history'] = dialogue_history
-    item_info['delex_dialogue_history'] = delex_dialogue_history
+    item_info['context'] = dialogue_history
+    item_info['delex_context'] = delex_dialogue_history
     item_info['domain_fertility'] = domain_fertility
     item_info['slots_fertility'] = slots_fertility
     item_info['slot_values'] = slot_values

@@ -10,8 +10,12 @@ class EncoderRNN(nn.Module):
         layers = [Embeddings(d_model, vocab), nn.Linear(
             d_model, d_model), nn.ReLU(), PositionalEncoding(d_model)]
         self.context_embeding = nn.Sequential(*layers)
-        self.domain_embeding = Embeddings(d_model, domain_vocab)
-        self.slot_embeding = Embeddings(d_model, slot_vocab)
+
+        domain_layers = [Embeddings(d_model, domain_vocab), PositionalEncoding(d_model)]
+        self.domain_embeding = nn.Sequential(*domain_layers)
+
+        slot_layers = [Embeddings(d_model, slot_vocab), PositionalEncoding(d_model)]
+        self.slot_embeding = nn.Sequential(*slot_layers)
 
         self.norm = nn.ModuleList()
         self.nb_layers = nb_layers

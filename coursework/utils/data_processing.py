@@ -1,8 +1,8 @@
 import json
 
-from dictionary import *
+from utils.dictionary import *
 from config import *
-from dataset import *
+from utils.dataset import *
 
 
 # def extract_slot_domain_info(ontology):
@@ -38,7 +38,7 @@ def extract_curr_slot_domain_fertility(slots_domains, fertility, curr_turn_slots
         domain = slots_domains[idx].split("-")[0]
         slot = slots_domains[idx].split("-")[1]
         value = curr_turn_slots_dict[slots_domains[idx]].split()
-        for i in words_num:
+        for i in range(words_num):
             domains.append(domain+"_DOMAIN")
             slots.append(slot+"_SLOT")
             values.append(value[i])
@@ -47,72 +47,72 @@ def extract_curr_slot_domain_fertility(slots_domains, fertility, curr_turn_slots
 
 def generate_data_detail(file_name, slots_domains, global_dict, domain_dict, slot_dict):
     data = []
-    with open(file_name) as f:
-        dials = json.load(f)
+    dials = json.load(open(file_name, 'r'))
 
-        for dialogue_data in dials:
-            dialogue_history = ""
-            delex_dialogue_history = ""
-            for dialogue_turn in dialogue_data["dialogue"]:
+    for dialogue_data in dials:
+        dialogue_history = ""
+        delex_dialogue_history = ""
+        for dialogue_turn in dialogue_data["dialogue"]:
 
-                all_domains = [item.split(
-                    "-")[0]+"_DOMAIN" for item in slots_domains]
-                all_slots = [item.split(
-                    "-")[1]+"_SLOT" for item in slots_domains]
+            all_domains = [item.split(
+                "-")[0]+"_DOMAIN" for item in slots_domains]
+            all_slots = [item.split(
+                "-")[1]+"_SLOT" for item in slots_domains]
 
-                domain_dict.index_words(all_domains)
-                slot_dict.index_words(all_slots)
+            domain_dict.index_words(all_domains)
+            slot_dict.index_words(all_slots)
 
-                global_dict.index_words(all_domains)
-                global_dict.index_words(all_slots)
+            global_dict.index_words(all_domains)
+            global_dict.index_words(all_slots)
 
-                global_dict.index_words(dialogue_turn["transcript"])
-                global_dict.index_words(dialogue_turn["system_transcript"])
-                global_dict.index_words(dialogue_turn["delex_transcript"])
-                global_dict.index_words(
-                    dialogue_turn["delex_system_transcript"])
+            global_dict.index_words(dialogue_turn["transcript"])
+            global_dict.index_words(dialogue_turn["system_transcript"])
+            global_dict.index_words(dialogue_turn["delex_transcript"])
+            global_dict.index_words(
+                dialogue_turn["delex_system_transcript"])
 
-                user_turn = SOS_token + dialogue_turn["transcript"] + EOS_token
-                system_turn = SOS_token + \
-                    dialogue_turn["system_transcript"] + EOS_token
-                delex_user_turn = SOS_token + \
-                    dialogue_turn["delex_transcript"] + EOS_token
-                delex_system_turn = SOS_token + \
-                    dialogue_turn["delex_system_transcript"] + EOS_token
+            user_turn = SOS_token + dialogue_turn["transcript"] + EOS_token
+            system_turn = SOS_token + \
+                dialogue_turn["system_transcript"] + EOS_token
+            delex_user_turn = SOS_token + \
+                dialogue_turn["delex_transcript"] + EOS_token
+            delex_system_turn = SOS_token + \
+                dialogue_turn["delex_system_transcript"] + EOS_token
 
-                dialogue_history = system_turn + user_turn
-                delex_dialogue_history = delex_system_turn + delex_user_turn
+            dialogue_history = system_turn + user_turn
+            delex_dialogue_history = delex_system_turn + delex_user_turn
 
-                curr_turn_slots_dict = dict([(l["slots"][0][0].replace(" ", ""), l["slots"][0][1])
-                                             for l in dialogue_turn["belief_state"]])  # get curr slot-domain info
+            curr_turn_slots_dict = dict([(l["slots"][0][0].replace(" ", ""), l["slots"][0][1])
+                                            for l in dialogue_turn["belief_state"]])  # get curr slot-domain info
 
-                fertility, gates = extract_fertility_and_gates(
-                    curr_turn_slots_dict, slots_domains)
+            fertility, gates = extract_fertility_and_gates(
+                curr_turn_slots_dict, slots_domains)
 
-                domain_fertility, slots_fertility, slot_values = extract_curr_slot_domain_fertility(
-                    slots_domains, fertility, curr_turn_slots_dict)
+            #values_y == output values
+            domain_fertility, slots_fertility, values_y = extract_curr_slot_domain_fertility(
+                slots_domains, fertility, curr_turn_slots_dict)
 
-                curr_turn_slots_list = [str(k) + '-' + str(v)
-                                        for k, v in curr_turn_slots_dict.items()]
+            curr_turn_slots_list = [str(k) + '-' + str(v)
+                                    for k, v in curr_turn_slots_dict.items()]
 
-                data_detail = {
-                    "dialogue_id": dials["dialogue_idx"],
-                    "turn_id": dialogue_turn["turn_idx"],
-                    "dialogue_history": dialogue_history,
-                    "delex_dialogue_history": delex_dialogue_history,
-                    "domains": all_domains,
-                    "slots": all_slots,
-                    "domain_fertility": domain_fertility,
-                    "slots_fertility": slots_fertility,
-                    "slot_values": slot_values,
-                    "turn_belief": curr_turn_slots_list,
-                    "slots_domains": slots_domains,
-                    "turn_belief_dict": curr_turn_slots_dict,
-                    "turn_utterance": system_turn + user_turn,
-                    "fertility": fertility,
-                    "gates": gates
-                }
-                data.append(data_detail)
+            data_detail = {
+                "dialogue_id": dialogue_data["dialogue_idx"],
+                "turn_id": dialogue_turn["turn_idx"],
+                "dialogue_history": dialogue_history,
+                "delex_dialogue_history": delex_dialogue_history,
+                "domains": all_domains,
+                "slots": all_slots,
+                "domain_fertility": domain_fertility,
+                "slots_fertility": slots_fertility,
+                "values_y": values_y,
+                "turn_belief": curr_turn_slots_list,
+                "slots_domains": slots_domains,
+                "turn_belief_dict": curr_turn_slots_dict,
+                "turn_utterance": system_turn + user_turn,
+                "fertility": fertility,
+                "gates": gates
+            }
+            data.append(data_detail)
     return data
 
 
@@ -127,13 +127,14 @@ def create_data_loader(data_info, global_dict, domain_dict, slot_dict, batch_siz
 
 
 def prepare_data(args):
-    ontology = json.load(open(onology_path, 'r'))
+    ontology = json.load(open(ontology_path, 'r'))
     # get all sorted slots and domains
     slots_domains = sorted([k.replace(" ", "").lower()
                             for k, v in ontology.items()])
     global_dict = Dictionary()
     domain_dict = Dictionary()
     slot_dict = Dictionary()
+
 
     # list of data details in each dialigue
     train_data = generate_data_detail(
@@ -142,7 +143,7 @@ def prepare_data(args):
         dev_data_path, slots_domains, global_dict, domain_dict, slot_dict)
     test_data = generate_data_detail(
         test_data_path, slots_domains, global_dict, domain_dict, slot_dict)
-
+    print(global_dict.index2word)
     train_data_loader = create_data_loader(
         train_data, global_dict, domain_dict, slot_dict, args["batch_size"], False)
     dev_data_loader = create_data_loader(
