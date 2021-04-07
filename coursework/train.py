@@ -10,7 +10,7 @@ train, dev, test = prepare_data(args)
 pbar = tqdm(enumerate(dev), total=len(dev), desc="evaluating", ncols=0)
 
 for _, data in pbar:
-    predict(data, None, None, None, None)
+    predict(data, None, None, None, None, [])
     break
 
 

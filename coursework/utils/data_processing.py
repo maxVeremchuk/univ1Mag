@@ -42,6 +42,7 @@ def extract_curr_slot_domain_fertility(slots_domains, fertility, curr_turn_slots
             domains.append(domain+"_DOMAIN")
             slots.append(slot+"_SLOT")
             values.append(value[i])
+
     return domains, slots, values
 
 
@@ -49,21 +50,21 @@ def generate_data_detail(file_name, slots_domains, global_dict, domain_dict, slo
     data = []
     dials = json.load(open(file_name, 'r'))
 
+    all_domains = [item.split(
+        "-")[0]+"_DOMAIN" for item in slots_domains]
+    all_slots = [item.split(
+        "-")[1]+"_SLOT" for item in slots_domains]
+
+    domain_dict.index_words(all_domains)
+    slot_dict.index_words(all_slots)
+
+    global_dict.index_words(all_domains)
+    global_dict.index_words(all_slots)
+
     for dialogue_data in dials:
         dialogue_history = ""
         delex_dialogue_history = ""
         for dialogue_turn in dialogue_data["dialogue"]:
-
-            all_domains = [item.split(
-                "-")[0]+"_DOMAIN" for item in slots_domains]
-            all_slots = [item.split(
-                "-")[1]+"_SLOT" for item in slots_domains]
-
-            domain_dict.index_words(all_domains)
-            slot_dict.index_words(all_slots)
-
-            global_dict.index_words(all_domains)
-            global_dict.index_words(all_slots)
 
             global_dict.index_words(dialogue_turn["transcript"])
             global_dict.index_words(dialogue_turn["system_transcript"])
@@ -73,22 +74,25 @@ def generate_data_detail(file_name, slots_domains, global_dict, domain_dict, slo
 
             user_turn = SOS_token + dialogue_turn["transcript"] + EOS_token
             system_turn = SOS_token + \
-                dialogue_turn["system_transcript"] + EOS_token
+                dialogue_turn["system_transcript"] + \
+                EOS_token if len(
+                    dialogue_turn["system_transcript"]) > 0 else ""
             delex_user_turn = SOS_token + \
                 dialogue_turn["delex_transcript"] + EOS_token
             delex_system_turn = SOS_token + \
-                dialogue_turn["delex_system_transcript"] + EOS_token
+                dialogue_turn["delex_system_transcript"] + EOS_token if len(
+                    dialogue_turn["delex_system_transcript"]) > 0 else ""
 
             dialogue_history = system_turn + user_turn
             delex_dialogue_history = delex_system_turn + delex_user_turn
 
             curr_turn_slots_dict = dict([(l["slots"][0][0].replace(" ", ""), l["slots"][0][1])
-                                            for l in dialogue_turn["belief_state"]])  # get curr slot-domain info
+                                         for l in dialogue_turn["belief_state"]])  # get curr slot-domain info
 
             fertility, gates = extract_fertility_and_gates(
                 curr_turn_slots_dict, slots_domains)
 
-            #values_y == output values
+            # values_y == output values
             domain_fertility, slots_fertility, values_y = extract_curr_slot_domain_fertility(
                 slots_domains, fertility, curr_turn_slots_dict)
 
@@ -135,7 +139,6 @@ def prepare_data(args):
     domain_dict = Dictionary()
     slot_dict = Dictionary()
 
-
     # list of data details in each dialigue
     train_data = generate_data_detail(
         train_data_path, slots_domains, global_dict, domain_dict, slot_dict)
@@ -143,7 +146,7 @@ def prepare_data(args):
         dev_data_path, slots_domains, global_dict, domain_dict, slot_dict)
     test_data = generate_data_detail(
         test_data_path, slots_domains, global_dict, domain_dict, slot_dict)
-    print(global_dict.index2word)
+
     train_data_loader = create_data_loader(
         train_data, global_dict, domain_dict, slot_dict, args["batch_size"], False)
     dev_data_loader = create_data_loader(
@@ -151,4 +154,6 @@ def prepare_data(args):
     test_data_loader = create_data_loader(
         test_data, global_dict, domain_dict, slot_dict, args["batch_size"], False)
 
+    # print(domain_dict.word2index)
+    # print(slot_dict.word2index)
     return train_data_loader, dev_data_loader, test_data_loader

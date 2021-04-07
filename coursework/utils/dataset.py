@@ -54,8 +54,12 @@ class Dataset(data.Dataset):
 
     def convert_to_index(self, seq, dictionary_w2i):
         indexed_seq = []
-        for word in seq:
-            indexed_seq.append(dictionary_w2i[word] if word in dictionary_w2i else UNK_token_id)
+        if isinstance(seq, str):
+            for word in seq.split():
+                indexed_seq.append(dictionary_w2i[word] if word in dictionary_w2i else UNK_token_id)
+        elif isinstance(seq, list):
+            for word in seq:
+                indexed_seq.append(dictionary_w2i[word] if word in dictionary_w2i else UNK_token_id)
         indexed_seq = torch.Tensor(indexed_seq)
         return indexed_seq
 

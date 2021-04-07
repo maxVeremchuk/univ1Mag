@@ -10,8 +10,12 @@ class Dictionary:
         self.word2index = dict([(v, k) for k, v in self.index2word.items()])
 
     def index_words(self, words):
-        for word in words.split():
-            self.index_word(word)
+        if isinstance(words, str):
+            for word in words.split():
+                self.index_word(word)
+        elif isinstance(words, list):
+            for word in words:
+                self.index_word(word)
 
     def index_word(self, word):
         if word not in self.word2index:

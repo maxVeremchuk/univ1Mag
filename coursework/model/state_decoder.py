@@ -17,7 +17,7 @@ class State_Decoder(nn.Module):
         self.pointer_generator = pointer_generator
         self.fert_decoder = fert_decoder
 
-    def forward(self, b, out):
+    def forward(self, out):
         domainslots = out['encoded_domainslots']
         delex_context = out['encoded_delex_context']
         context = out['encoded_context']
