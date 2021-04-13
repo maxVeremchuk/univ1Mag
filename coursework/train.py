@@ -5,9 +5,12 @@ from tqdm import tqdm
 args = {}
 args['batch_size'] = 1
 
-train, dev, test = prepare_data(args)
+train, dev, test, max_fertility = prepare_data(args)
 
 pbar = tqdm(enumerate(dev), total=len(dev), desc="evaluating", ncols=0)
+
+model = create_model(
+    dictionary, domain_dicrionary, slot_dictionary, max_fertility, args)
 
 for _, data in pbar:
     predict(data, None, None, None, None, [])
@@ -15,7 +18,4 @@ for _, data in pbar:
 
 
 
-# model = create_model(
-#     src_dict = src_dict,
-#     domain_dict = domain_dict, slot_dict = slot_dict,
-#     max_fertiltiy=max_fertiltiy)
+

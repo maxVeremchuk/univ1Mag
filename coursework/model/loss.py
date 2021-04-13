@@ -3,7 +3,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.utils.weight_norm import weight_norm
-from torch.autograd import Variable
 
 class NoamOpt:
     "Optim wrapper that implements rate."

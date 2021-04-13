@@ -61,6 +61,8 @@ def generate_data_detail(file_name, slots_domains, global_dict, domain_dict, slo
     global_dict.index_words(all_domains)
     global_dict.index_words(all_slots)
 
+    max_fertility_value = 0
+
     for dialogue_data in dials:
         dialogue_history = ""
         delex_dialogue_history = ""
@@ -117,7 +119,9 @@ def generate_data_detail(file_name, slots_domains, global_dict, domain_dict, slo
                 "gates": gates
             }
             data.append(data_detail)
-    return data
+
+            max_len_val_per_slot = max(max(fertility), max_len_val_per_slot)
+    return data, max_len_val_per_slot
 
 
 def create_data_loader(data_info, global_dict, domain_dict, slot_dict, batch_size, shuffle):
@@ -140,12 +144,14 @@ def prepare_data(args):
     slot_dict = Dictionary()
 
     # list of data details in each dialigue
-    train_data = generate_data_detail(
+    train_data, train_max_fertility = generate_data_detail(
         train_data_path, slots_domains, global_dict, domain_dict, slot_dict)
-    dev_data = generate_data_detail(
+    dev_data, dev_max_fertility = generate_data_detail(
         dev_data_path, slots_domains, global_dict, domain_dict, slot_dict)
-    test_data = generate_data_detail(
+    test_data, test_max_fertility = generate_data_detail(
         test_data_path, slots_domains, global_dict, domain_dict, slot_dict)
+
+    max_fertility = max(train_max_fertility, dev_max_fertility, test_max_fertility)
 
     train_data_loader = create_data_loader(
         train_data, global_dict, domain_dict, slot_dict, args["batch_size"], False)
@@ -156,4 +162,4 @@ def prepare_data(args):
 
     # print(domain_dict.word2index)
     # print(slot_dict.word2index)
-    return train_data_loader, dev_data_loader, test_data_loader
+    return train_data_loader, dev_data_loader, test_data_loader, max_fertility

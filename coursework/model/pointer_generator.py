@@ -21,4 +21,4 @@ class PointerGenerator(nn.Module):
         p_state_gen = nn.Sigmoid()(self.pointer_gen_W(p_gen_vec))
         p_state_out = p_state_gen * p_state_vocab + \
             (1 - p_state_gen) * p_state_ptr
-        return torch.log(p_state_out)
+        return p_state_out
