@@ -22,3 +22,6 @@ class Dictionary:
             self.word2index[word] = self.n_words
             self.index2word[self.n_words] = word
             self.n_words += 1
+
+    def __len__(self):
+        return self.n_words

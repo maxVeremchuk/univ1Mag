@@ -73,6 +73,7 @@ class SubLayer(nn.Module):
     def forward(self, seq1, seq2, seq3):
         out = self.sublayer[0](
             seq1, lambda seq1: self.attn[0](seq1, seq1, seq1))
+        #print("out size::" + str(out.size()))
         out = self.sublayer[1](out, lambda out: self.attn[1](out, seq2, seq2))
         out = self.sublayer[2](out, lambda out: self.attn[2](out, seq3, seq3))
         return self.sublayer[3](out, self.feedforward)

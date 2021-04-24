@@ -85,8 +85,8 @@ def generate_data_detail(file_name, slots_domains, global_dict, domain_dict, slo
                 dialogue_turn["delex_system_transcript"] + EOS_token if len(
                     dialogue_turn["delex_system_transcript"]) > 0 else ""
 
-            dialogue_history = system_turn + user_turn
-            delex_dialogue_history = delex_system_turn + delex_user_turn
+            dialogue_history += system_turn + user_turn
+            delex_dialogue_history += delex_system_turn + delex_user_turn
 
             curr_turn_slots_dict = dict([(l["slots"][0][0].replace(" ", ""), l["slots"][0][1])
                                          for l in dialogue_turn["belief_state"]])  # get curr slot-domain info
@@ -120,8 +120,8 @@ def generate_data_detail(file_name, slots_domains, global_dict, domain_dict, slo
             }
             data.append(data_detail)
 
-            max_len_val_per_slot = max(max(fertility), max_len_val_per_slot)
-    return data, max_len_val_per_slot
+            max_fertility_value = max(max(fertility), max_fertility_value)
+    return data, max_fertility_value
 
 
 def create_data_loader(data_info, global_dict, domain_dict, slot_dict, batch_size, shuffle):
@@ -162,4 +162,4 @@ def prepare_data(args):
 
     # print(domain_dict.word2index)
     # print(slot_dict.word2index)
-    return train_data_loader, dev_data_loader, test_data_loader, max_fertility
+    return train_data_loader, dev_data_loader, test_data_loader, max_fertility, global_dict, domain_dict, slot_dict

@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from config import *
 
 
@@ -9,24 +10,37 @@ def predict(data, model, dictionary, domain_dicrionary, slot_dictionary, curr_pr
         curr_item_info = {}
         for k, v in data.items():
             curr_item_info[k] = v[i]  # i - batch position in value list
-
-        out, generated_fetrility, generated_gates = model.fertility_decoder(
+        #TODO add .unsqueeze(0)
+        curr_item_info['domains'] = curr_item_info['domains'].unsqueeze(0)
+        curr_item_info['slots'] = curr_item_info['slots'].unsqueeze(0)
+        curr_item_info['context'] = curr_item_info['context'].unsqueeze(0)
+        curr_item_info['delex_context'] = curr_item_info['delex_context'].unsqueeze(0)
+        _, generated_fetrility, generated_gates = model.fertility_decoder.forward(
             curr_item_info)  # first encoder decoder
 
-        slots_out, domains_out, dontcare_out = get_state_encoder_inport_from_generated_fertility(
-            generated_fetrility, generated_gates, curr_item_info["slots"], curr_item_info["domains"])
+        generated_fetrility = generated_fetrility.squeeze(0)
+        generated_gates = generated_gates.squeeze(0)
 
-        if len(slots_out):
+        slots_out, domains_out, dontcare_out = get_state_encoder_inport_from_generated_fertility(
+            generated_fetrility, generated_gates, curr_item_info["slots"].squeeze(0), curr_item_info["domains"].squeeze(0))
+        print("-"*10)
+        print(curr_item_info["domains"])
+        if len(slots_out) == 0:
             print("len slots out is 0---------------")
             print(slots_out)
             print(domains_out)
             print(dontcare_out)
             print("-"*20)
 
-        out = model.state_decoder(out)  # second decoder
+        slots_out = torch.stack(slots_out).long().unsqueeze(0)
+        domains_out = torch.stack(domains_out).long().unsqueeze(0)
+
+        curr_item_info["slots"] = slots_out
+        curr_item_info["domains"] = domains_out
+        out = model.state_decoder(curr_item_info)  # second decoder
 
         curr_prediction = generate_prediction(curr_item_info, generated_fetrility, generated_gates, slots_out, domains_out,
-                                              dontcare_out, out['generated_y'], dictionary, domain_dicrionary, slot_dictionary, curr_prediction)
+                                            dontcare_out, out['generated_y'], dictionary, domain_dicrionary, slot_dictionary, curr_prediction)
 
         # curr_prediction = generate_prediction(curr_item_info, None, None,
         #                                       None, None, None, None, None)
@@ -37,15 +51,20 @@ def predict(data, model, dictionary, domain_dicrionary, slot_dictionary, curr_pr
 def get_state_encoder_inport_from_generated_fertility(fertilities, gates, slots, domains):
     dict_value_out = {}
     dontcare_out = []
+
+    if len(fertilities) == 0:
+        return [], [], []
+
     for i in range(fertilities.shape[0]):
         fertility = fertilities[i]
         gate = gates[i]
         slot = slots[i]
         domain = domains[i]
+
         if gate == GATES['none']:
             continue
         elif gate == GATES['dontcare']:
-            dontcare_out.append((slot, domain))
+            dontcare_out.append((slot.long().item(), domain.long().item()))
             continue
 
         if slot in [0, 1, 2, 3]:  # UNK, PAD, SOS, EOS
@@ -76,9 +95,10 @@ def generate_prediction(curr_item_info, generated_fetrility, generated_gates, sl
     turn_id = curr_item_info['turn_id']
     turn_belief_dict = curr_item_info['turn_belief_dict']
 
-    states = [dictionary.index2word[i] for i in generated_states]
-    slots = [slot_dictionary.index2word[i] for i in slots_out]
-    domains = [domain_dicrionary.index2word[i] for i in domains_out]
+    print(generated_states)
+    states = [dictionary.index2word[i] for i in generated_states.squeeze(0).tolist()]
+    slots = [slot_dictionary.index2word[i] for i in slots_out.squeeze(0).tolist()]
+    domains = [domain_dicrionary.index2word[i] for i in domains_out.squeeze(0).tolist()]
 
     state_gathered = {}
     for idx in range(len(domains)):
@@ -100,7 +120,7 @@ def generate_prediction(curr_item_info, generated_fetrility, generated_gates, sl
         state_gathered[key].append(state)
 
     for dontcare in dontcare_out:
-        d, s = dontcare
+        s, d = dontcare
         domain = domain_dicrionary.index2word[d]
         slot = slot_dictionary.index2word[s]
         domain = domain.replace("_DOMAIN", "")
@@ -108,6 +128,7 @@ def generate_prediction(curr_item_info, generated_fetrility, generated_gates, sl
         key = '{}-{}'.format(domain,slot)
         state_gathered[key] = 'dontcare'
 
+    print(dialogue_id)
     if dialogue_id not in curr_prediction: curr_prediction[dialogue_id] = {}
     if turn_id not in curr_prediction[dialogue_id]: curr_prediction[dialogue_id][turn_id] = {}
 

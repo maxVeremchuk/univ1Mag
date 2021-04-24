@@ -1,16 +1,17 @@
 import copy
 
-from attention import *
+from model.attention import *
 from config import *
-from encoder import *
-from feedforward import *
-from fertility_decoder import *
-from pointer_generator import *
-from state_decoder import *
+from model.encoder import *
+from model.feedforward import *
+from model.fertility_decoder import *
+from model.pointer_generator import *
+from model.state_decoder import *
 
 
 class ChatBotModel(nn.Module):
     def __init__(self, fertility_decoder, state_decoder):
+        super(ChatBotModel, self).__init__()
         self.fertility_decoder = fertility_decoder
         self.state_decoder = state_decoder
 
@@ -51,7 +52,8 @@ def create_model(dictionary, domain_dicrionary, slot_dictionary, max_fert_value,
         feedforward_layer), args['drop'], nb_attn=nb_attn)
     state_att_layer = AttentionNet(state_sub_layer, args['state_dec_N'])
 
-    pointer_generator = PointerGenerator(len(dictionary), args['d_model'])
+    pointer_attn = MultiHeadedAttention(1, args['d_model'], dropout=0.0)
+    pointer_generator = PointerGenerator(len(dictionary), args['d_model'], pointer_attn)
 
     state_decoder = State_Decoder(encoder_state,
                                   state_att_layer, pointer_generator)
