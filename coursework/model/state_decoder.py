@@ -13,13 +13,12 @@ class State_Decoder(nn.Module):
         self.pointer_generator = pointer_generator
 
     def forward(self, out):
-        # print("state decoder")
-        # print(out['domains'])
-        # print(out['slots'])
-        domainslots, context, delex_context = self.encoder(out['domains'], out['slots'], out['context'], out['delex_context'])
+        domainslots, context, delex_context = self.encoder(out['domain_fertility'], out['slots_fertility'], out['context'], out['delex_context'])
+        # print(context.size())
+        # print(domainslots.size())
         out_states = self.state_attention(domainslots, context, delex_context)
         generated = self.pointer_generator(
-            domainslots, out_states, context, out['context']).max(dim=-1)[1]
+            domainslots, out_states, context, out['context'])#.max(dim=-1)[1]
 
         out['out_states'] = out_states
         out['generated_y'] = generated

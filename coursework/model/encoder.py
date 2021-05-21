@@ -24,7 +24,7 @@ class EncoderRNN(nn.Module):
             self.norm.append(LayerNorm(d_model))
 
     def forward(self, domains, slots, context, delex_context):
-        print(domains)
+        #print(domains)
         context = self.context_embeding(context)
         delex_context = self.context_embeding(delex_context)
         domains = self.domain_embeding(domains)

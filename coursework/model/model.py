@@ -16,7 +16,7 @@ class ChatBotModel(nn.Module):
         self.state_decoder = state_decoder
 
     def forward(self, out):
-        out = self.fertility_decoder(out)
+        out = self.fertility_decoder.forward(out)
         out = self.state_decoder(out)
         return out
 
@@ -40,7 +40,7 @@ def create_model(dictionary, domain_dicrionary, slot_dictionary, max_fert_value,
         feedforward_layer), args['drop'], nb_attn=nb_attn)
     fert_att_layer = AttentionNet(fert_sub_layer, args['fert_dec_N'])
 
-    fert_generator = nn.Linear(args['d_model'], max_fert_value)
+    fert_generator = nn.Linear(args['d_model'], max_fert_value + 1)
     gate_generator = nn.Linear(args['d_model'], len(GATES))
 
     fertility_decoder = Fertility_Decoder(

@@ -29,12 +29,13 @@ class Dataset(data.Dataset):
         gates = data_info['gates']
 
         #context == dialogue_history
-        #values_y == slot_values
         item_info = {
             "dialogue_id": id,
             "turn_id": turn_id,
             "context": dialogue_history,
+            "context_plain": data_info['dialogue_history'],
             "delex_context": delex_dialogue_history,
+            "delex_context_plain": data_info['dialogue_history'],
             "domains": all_domains,
             "slots": all_slots,
             "domain_fertility": domain_fertility,
@@ -93,6 +94,8 @@ def collate_fn(data):
     slot_values = merge(item_info['slot_values'], PAD_token_id)
     fertility = merge(item_info['fertility'], PAD_token_id)
     gates = merge(item_info['gates'], GATES['none'])
+    domains = merge(item_info['domains'], PAD_token_id)
+    slots = merge(item_info['slots'], PAD_token_id)
 
     item_info['context'] = dialogue_history
     item_info['delex_context'] = delex_dialogue_history
@@ -101,6 +104,8 @@ def collate_fn(data):
     item_info['slot_values'] = slot_values
     item_info['fertility'] = fertility
     item_info['gates'] = gates
+    item_info['domains'] = domains
+    item_info['slots'] = slots
 
     return item_info
 

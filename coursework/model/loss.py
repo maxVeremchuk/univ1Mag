@@ -38,18 +38,16 @@ class NoamOpt:
 class LossCompute:
     "A simple loss compute and train function."
 
-    def __init__(self, model, generated_fertility, generated_gates,
+    def __init__(self, model,
                  fetility_criterion, state_gen_criterion, gate_gen_criterion, optimizer):
         self.model = model
-        self.generated_fertility = generated_fertility
-        self.generated_gates = generated_gates
         self.fetility_criterion = fetility_criterion
         self.state_gen_criterion = state_gen_criterion
         self.gate_gen_criterion = gate_gen_criterion
         self.optimizer = optimizer
 
-    def __call__(self, state_generator_out, data, is_eval=False):
-        loss = 0
+    def __call__(self, data, state_generator_out, generated_fertility, generated_gates, is_eval=False):
+        loss = 0.0
         fertility_out_loss = torch.Tensor([0])
         gate_out_loss = torch.Tensor([0])
         state_out_loss = torch.Tensor([0])
@@ -57,21 +55,27 @@ class LossCompute:
 
         # fetility loss
         slot_out_nb_tokens = data['fertility'].view(-1).size()[0]
-        fertility_out_loss = self.fetility_criterion(self.generated_fertility.view(-1, self.generated_fertility.size(-1)),
+        fertility_out_loss = self.fetility_criterion(generated_fertility.view(-1, generated_fertility.size(-1)),
                                                      data['fertility'].view(-1))
         loss += fertility_out_loss
 
-        # slot loss
+        print("\nfertility_out_loss" + str(fertility_out_loss))
+
+        # gate loss
         gate_out_nb_tokens = data['gates'].view(-1).size()[0]
-        gate_out_loss = self.gate_gen_criterion(self.generated_gates.view(-1, self.generated_gates.size(-1)),
+        gate_out_loss = self.gate_gen_criterion(generated_gates.view(-1, generated_gates.size(-1)),
                                                 data['gates'].view(-1))
         loss += gate_out_loss
 
-        state_out_nb_tokens = data['values_y'].view(-1).size()[0]
+        print("gate_out_loss" + str(gate_out_loss))
+
+        # slot loss
+        state_out_nb_tokens = data['slot_values'].view(-1).size()[0]
         state_out_loss = self.state_gen_criterion(
-            state_generator_out.view(-1, state_generator_out.size(-1)), data['values_y'].view(-1))
+            state_generator_out.view(-1, state_generator_out.size(-1)), data['slot_values'].view(-1))
         loss += state_out_loss
 
+        print("state_out_loss" + str(state_out_loss))
         if not is_eval:
             loss.backward()
         if self.optimizer is not None:
@@ -79,9 +83,9 @@ class LossCompute:
             self.optimizer.optimizer.zero_grad()
 
         losses = {}
-        losses['fertility_loss'] = fertility_out_loss.item()
-        losses['gate_loss'] = gate_out_loss.item()
-        losses['state_loss'] = state_out_loss.item()
+        losses['fertility_loss'] = float(fertility_out_loss)
+        losses['gate_loss'] =  float(gate_out_loss)
+        losses['state_loss'] = float(state_out_loss)
 
         nb_tokens = {}
         nb_tokens['slot'] = slot_out_nb_tokens
